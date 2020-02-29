@@ -1,0 +1,20 @@
+{
+  "name": "bookbackend",
+  "version": "1.0.0",
+  "description": "Backend service for book app",
+  "main": "src/main.js",
+  "author": "Simon Frisk",
+  "license": "MIT",
+  "scripts": {
+    "start": "node src/main.js",
+    "dev": "nodemon src/main.js"
+  },
+  "dependencies": {
+    "apollo-server": "^2.10.1",
+    "graphql": "^14.6.0",
+    "graphql-import": "^1.0.0-beta.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.2"
+  }
+}
