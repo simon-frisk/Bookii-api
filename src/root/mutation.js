@@ -1,4 +1,4 @@
-const User = require('../user/user.modell')
+const User = require('../user/user.model')
 const jwt = require('jsonwebtoken-promisified')
 const bcrypt = require('bcrypt')
 
@@ -7,7 +7,7 @@ module.exports = {
     await validateUser(user)
     const password = await bcrypt.hash(user.password, 10)
     const { id } = await User.create({ ...user, password })
-    return jwt.signAsync({ userid: id }, process.env.JWT_SECRET)
+    return jwt.signAsync({ userId: id }, process.env.JWT_SECRET)
   }
 }
 

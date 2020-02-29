@@ -1,4 +1,5 @@
 type Query {
+  signin(email: String!, password: String!): String
   hello: String!
 }
 
