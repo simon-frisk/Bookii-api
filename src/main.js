@@ -20,7 +20,8 @@ async function main() {
 
   const context = async ({ req }) => {
     try {
-      const token = req.headers.authorization || ''
+      const authHeader = req.headers.authorization
+      const token = req.headers.authorization.split(' ')[1]
       const { userId } = await jwt.verifyAsync(token, process.env.JWT_SECRET)
       return { userId }
     } catch(error) {}
