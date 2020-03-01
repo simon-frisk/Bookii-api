@@ -5,16 +5,37 @@ type Query {
 
 type Mutation {
   signup(user: UserInput!): String!
+  addReadBook(isbn: String!, comment: String!, date: String!): Book!
 }
 
 type User {
   _id: ID!
   email: String!
   name: String!
+  readBooks: [UserReadBook!]!
+}
+
+type UserReadBook {
+  book: Book!
+  comment: String!
+  date: String!
 }
 
 input UserInput {
   email: String!
   name: String!
   password: String!
+}
+
+type Book {
+  isbn: String!
+  title: String!
+  subTitle: String
+  authors: [String!]
+  pages: Int
+  publisher: String
+  published: String
+  googleRating: Int
+  googleRatingsCount: Int
+  thumbnail: String
 }

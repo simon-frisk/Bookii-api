@@ -1,9 +1,23 @@
 const User = require('../user/user.model')
 const jwt = require('jsonwebtoken-promisified')
 const bcrypt = require('bcrypt')
-const {UserInputError} = require('apollo-server')
+const {UserInputError, AuthenticationError, ApolloError} = require('apollo-server')
+const getGoogleBookData = require('../util/getGoogleBookData')
 
 module.exports = {
+  async addReadBook(_, { isbn, comment, date }, { userId }) {
+    if(!userId) throw new AuthenticationError('Not authorized')
+    if(!isbn || !comment || !date) throw new UserInputError('ISBN, comment and date required')
+    const user = await User.findById(userId)
+    if(!user) throw new ApolloError()
+    user.readBooks.push({
+      isbn,
+      comment,
+      date
+    })
+    user.save()
+    return getGoogleBookData(isbn)
+  },
   async signup(_, { user }) {
     await validateUser(user)
     const password = await bcrypt.hash(user.password, 10)

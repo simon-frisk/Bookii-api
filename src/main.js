@@ -15,12 +15,12 @@ async function main() {
 
   const resolvers = {
     Query: require('./root/query'),
-    Mutation: require('./root/mutation')
+    Mutation: require('./root/mutation'),
+    UserReadBook: require('./root/UserReadBook')
   }
 
   const context = async ({ req }) => {
     try {
-      const authHeader = req.headers.authorization
       const token = req.headers.authorization.split(' ')[1]
       const { userId } = await jwt.verifyAsync(token, process.env.JWT_SECRET)
       return { userId }
