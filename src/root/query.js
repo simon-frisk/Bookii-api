@@ -1,14 +1,18 @@
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken-promisified')
 const User = require('../user/user.model')
+const { AuthenticationError, UserInputError } = require('apollo-server')
 
 module.exports = {
-  hello: () => 'hello world',
   async signin(_, { email, password }) {
     const user = await User.findOne({ email })
-    if (!user) return
+    if (!user) throw new UserInputError('Email or password not corrent')
     const correctPassword = await bcrypt.compare(password, user.password)
-    if (!correctPassword) return
+    if (!correctPassword) throw new UserInputError('Email or password not corrent')
     return jwt.signAsync({ userId: user._id }, process.env.JWT_SECRET)
+  },
+  async user(_, { userId: searchedUserId }, { userId }) {
+    if(!userId) throw new AuthenticationError('Not authorized')
+    return User.findById(searchedUserId || userId)
   }
 }
