@@ -5,6 +5,9 @@
   "main": "src/main.js",
   "author": "Simon Frisk",
   "license": "MIT",
+  "engines": {
+    "node": ">=12.15.0"
+  },
   "scripts": {
     "start": "node src/main.js",
     "dev": "nodemon src/main.js"

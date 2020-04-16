@@ -7,19 +7,21 @@ exports.getBookDataFromISBN = async (isbn) => {
     )
     if (!data.items) return
     return extractDataFromVolumeInfo(data.items[0].volumeInfo)
-  } catch (error) {}
+  } catch (error) {
+    return
+  }
 }
 
 exports.getBooksDataFromQuery = async (query) => {
   try {
     const { data } = await axios.get(
-      `https://www.googleapis.com/books/v1/volumes?q=${q}&maxResults=40`
+      `https://www.googleapis.com/books/v1/volumes?q=${query}&maxResults=40`
     )
     const volumeInfoArray = data.items.map((item) => item.volumeInfo)
-    return volumeInfoArray
-      .map(extractDataFromVolumeInfo)
-      .filter((book) => book && book.isbn && book.title)
-  } catch (error) {}
+    return volumeInfoArray.map(extractDataFromVolumeInfo).filter((book) => book)
+  } catch (error) {
+    return []
+  }
 }
 
 const extractDataFromVolumeInfo = (data) => {
@@ -28,10 +30,11 @@ const extractDataFromVolumeInfo = (data) => {
   const isbn10 = bookIds.find((bookId) => bookId.type === 'ISBN_10')
   const isbn13 = bookIds.find((bookId) => bookId.type === 'ISBN_13')
   if (!isbn10 && !isbn13) return
+  if (!data.title) return
 
   return {
-    isbn10,
-    isbn13,
+    isbn10: isbn10 && isbn10.identifier,
+    isbn13: isbn13 && isbn13.identifier,
     title: data.title,
     subTitle: data.subtitle,
     description: data.description,

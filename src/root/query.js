@@ -2,6 +2,10 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken-promisified')
 const User = require('../user/user.model')
 const { AuthenticationError, UserInputError } = require('apollo-server')
+const {
+  getBookDataFromISBN,
+  getBooksDataFromQuery,
+} = require('../util/bookdata')
 
 module.exports = {
   async signin(_, { email, password }) {
@@ -15,5 +19,13 @@ module.exports = {
   async user(_, { userId: searchedUserId }, { userId }) {
     if (!userId) throw new AuthenticationError('Not authorized')
     return User.findById(searchedUserId || userId)
+  },
+  async book(_, { isbn10, isbn13 }, userId) {
+    if (!userId) throw new AuthenticationError('Not authorized')
+    return getBookDataFromISBN(isbn10 || isbn13)
+  },
+  async bookQuery(_, { query }, userId) {
+    if (!userId) throw new AuthenticationError('Not authorized')
+    return getBooksDataFromQuery(query)
   },
 }

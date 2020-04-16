@@ -1,6 +1,8 @@
 type Query {
   signin(email: String!, password: String!): String!
   user(userId: ID): User
+  book(isbn10: String, isbn13: String): Book
+  bookQuery(query: String!): [Book!]!
 }
 
 type Mutation {
