@@ -1,5 +1,6 @@
 const { ApolloServer } = require('apollo-server')
 const { importSchema } = require('graphql-import')
+const { ApolloLogExtension } = require('apollo-log')
 const connectDB = require('./util/db')
 const dotenv = require('dotenv')
 const jwt = require('jsonwebtoken-promisified')
@@ -28,7 +29,12 @@ async function main() {
     } catch (error) {}
   }
 
-  const server = new ApolloServer({ typeDefs, resolvers, context })
+  const server = new ApolloServer({
+    typeDefs,
+    resolvers,
+    context,
+    extensions: [() => new ApolloLogExtension({})],
+  })
 
   server.listen(PORT).then(({ url }) => {
     console.log(`Server running at ${url}`)
