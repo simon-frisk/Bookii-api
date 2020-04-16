@@ -8,11 +8,12 @@ module.exports = {
     const user = await User.findOne({ email })
     if (!user) throw new UserInputError('Email or password not corrent')
     const correctPassword = await bcrypt.compare(password, user.password)
-    if (!correctPassword) throw new UserInputError('Email or password not corrent')
+    if (!correctPassword)
+      throw new UserInputError('Email or password not corrent')
     return jwt.signAsync({ userId: user._id }, process.env.JWT_SECRET)
   },
   async user(_, { userId: searchedUserId }, { userId }) {
-    if(!userId) throw new AuthenticationError('Not authorized')
+    if (!userId) throw new AuthenticationError('Not authorized')
     return User.findById(searchedUserId || userId)
-  }
+  },
 }

@@ -1,7 +1,7 @@
 {
-  "name": "bookbackend",
+  "name": "bookiibackend",
   "version": "1.0.0",
-  "description": "Backend service for book app",
+  "description": "Backend service for bookii",
   "main": "src/main.js",
   "author": "Simon Frisk",
   "license": "MIT",

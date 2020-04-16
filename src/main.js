@@ -16,7 +16,7 @@ async function main() {
   const resolvers = {
     Query: require('./root/query'),
     Mutation: require('./root/mutation'),
-    UserReadBook: require('./root/UserReadBook')
+    UserFeedBook: require('./root/UserFeedBook'),
   }
 
   const context = async ({ req }) => {
@@ -24,7 +24,7 @@ async function main() {
       const token = req.headers.authorization.split(' ')[1]
       const { userId } = await jwt.verifyAsync(token, process.env.JWT_SECRET)
       return { userId }
-    } catch(error) {}
+    } catch (error) {}
   }
 
   const server = new ApolloServer({ typeDefs, resolvers, context })

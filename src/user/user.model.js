@@ -1,34 +1,33 @@
 const { Schema, model } = require('mongoose')
 
-const ReadBook = new Schema({
+const FeedBook = new Schema({
   isbn: {
     type: String,
-    required: true
+    required: true,
   },
   comment: {
     type: String,
-    required: true
   },
   date: {
     type: String,
-    required: true
-  }
+    required: true,
+  },
 })
 
 const User = new Schema({
   email: {
     type: String,
-    required: true
+    required: true,
   },
   name: {
     type: String,
-    required: true
+    required: true,
   },
   password: {
     type: String,
-    required: true
+    required: true,
   },
-  readBooks: [ReadBook]
+  feedBooks: [FeedBook],
 })
 
 module.exports = model('User', User)
