@@ -1,13 +1,9 @@
 const { Schema, model } = require('mongoose')
 
 const FeedBook = new Schema({
-  isbn: {
-    type: String,
-    required: true,
-  },
-  comment: {
-    type: String,
-  },
+  isbn10: String,
+  isbn13: String,
+  comment: String, //can be empty string
   date: {
     type: String,
     required: true,

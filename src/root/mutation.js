@@ -8,16 +8,17 @@ const {
 } = require('apollo-server')
 
 module.exports = {
-  async addFeedBook(_, { isbn, comment, date }, { userId }) {
+  async addFeedBook(_, { isbn10, isbn13, comment, date }, { userId }) {
     if (!userId) throw new AuthenticationError('Not authorized')
-    if (!isbn) throw new UserInputError('Bad isbn')
+    if (!isbn10 && !isbn13) throw new UserInputError('Bad isbn')
     if (comment === undefined || comment === null)
       throw new UserInputError('Bad comment')
     if (!date) throw new UserInputError('Bad date')
     const user = await User.findById(userId)
     if (!user) throw new ApolloError()
     const feedBook = {
-      isbn,
+      isbn10,
+      isbn13,
       comment,
       date,
     }

@@ -5,17 +5,24 @@ type Query {
 
 type Mutation {
   signup(user: UserInput!): String!
-  addFeedBook(isbn: String!, comment: String!, date: String!): UserFeedBook!
+  addFeedBook(
+    isbn10: String
+    isbn13: String
+    comment: String!
+    date: String!
+  ): UserFeedBook!
 }
 
 type User {
   _id: ID!
   email: String!
   name: String!
-  feedBooks: [UserFeedBook!]!
+  feedBooks(isbn10: String, isbn13: String): [UserFeedBook!]!
 }
 
 type UserFeedBook {
+  isbn10: String
+  isbn13: String
   book: Book!
   comment: String!
   date: String!
@@ -28,7 +35,8 @@ input UserInput {
 }
 
 type Book {
-  isbn: String!
+  isbn10: String
+  isbn13: String
   title: String!
   subTitle: String
   description: String

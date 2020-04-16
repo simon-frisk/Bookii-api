@@ -11,12 +11,13 @@ async function main() {
 
   await connectDB()
 
-  const typeDefs = await importSchema('./src/root/schema.gql')
+  const typeDefs = await importSchema('./src/schema.gql')
 
   const resolvers = {
     Query: require('./root/query'),
     Mutation: require('./root/mutation'),
     UserFeedBook: require('./root/UserFeedBook'),
+    User: require('./user/user.resolver'),
   }
 
   const context = async ({ req }) => {

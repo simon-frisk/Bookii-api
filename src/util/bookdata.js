@@ -23,15 +23,15 @@ exports.getBooksDataFromQuery = async (query) => {
 }
 
 const extractDataFromVolumeInfo = (data) => {
-  if (!data.industryIdentifiers) return
-  const isbnObject = data.industryIdentifiers.find(
-    (identifier) =>
-      identifier.type === 'ISBN_13' || identifier.type === 'ISBN_10'
-  )
-  if (!isbnObject) return
+  const bookIds = data.industryIdentifiers
+  if (!bookIds) return
+  const isbn10 = bookIds.find((bookId) => bookId.type === 'ISBN_10')
+  const isbn13 = bookIds.find((bookId) => bookId.type === 'ISBN_13')
+  if (!isbn10 && !isbn13) return
 
   return {
-    isbn: isbnObject.identifier,
+    isbn10,
+    isbn13,
     title: data.title,
     subTitle: data.subtitle,
     description: data.description,
