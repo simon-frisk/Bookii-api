@@ -23,8 +23,7 @@ module.exports = {
   },
   async book(_, { bookId }, userId) {
     if (!userId) throw new AuthenticationError('Not authorized')
-    if (isBookIdTypeISBN(userFeedBook.bookId))
-      return getBookDataFromISBN(userFeedBook.bookId)
+    if (isBookIdTypeISBN(bookId)) return getBookDataFromISBN(bookId)
   },
   async bookQuery(_, { query }, userId) {
     if (!userId) throw new AuthenticationError('Not authorized')
