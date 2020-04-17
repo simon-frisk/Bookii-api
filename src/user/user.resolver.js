@@ -1,9 +1,11 @@
+const { isBookIdTypeISBN, doesISBNBookIdsMatch } = require('../util/bookIdUtil')
+
 module.exports = {
-  async feedBooks(user, { isbn10, isbn13 }) {
-    return (isbn10 || isbn13
-      ? isbn10
-        ? user.feedBooks.filter((feedBook) => feedBook.isbn10 === isbn10)
-        : user.feedBooks.filter((feedBook) => feedBook.isbn13 === isbn13)
+  async feedBooks(user, { bookId }) {
+    return (isBookIdTypeISBN(bookId)
+      ? user.feedBooks.filter((feedBook) =>
+          doesISBNBookIdsMatch(feedBook.bookId, bookId)
+        )
       : user.feedBooks
     ).sort(
       (a, b) => new Date(b.readDate).getTime() - new Date(a.readDate).getTime()

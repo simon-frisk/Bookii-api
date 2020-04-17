@@ -1,14 +1,20 @@
 const axios = require('axios')
+const { isBookIdTypeISBN, getBookIdValue } = require('../util/bookIdUtil')
+const { ApolloError } = require('apollo-server')
 
-exports.getBookDataFromISBN = async (isbn) => {
-  try {
-    const { data } = await axios.get(
-      `https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}`
-    )
-    if (!data.items) return
-    return extractDataFromVolumeInfo(data.items[0].volumeInfo)
-  } catch (error) {
-    return
+exports.getBookDataFromBookId = async (bookId) => {
+  if (isBookIdTypeISBN(bookId)) {
+    try {
+      const { data } = await axios.get(
+        `https://www.googleapis.com/books/v1/volumes?q=isbn:${getBookIdValue(
+          bookId
+        )}`
+      )
+      if (!data.items) return
+      return extractDataFromVolumeInfo(data.items[0].volumeInfo)
+    } catch (error) {
+      throw new ApolloError('Failed to get book data')
+    }
   }
 }
 
@@ -20,7 +26,7 @@ exports.getBooksDataFromQuery = async (query) => {
     const volumeInfoArray = data.items.map((item) => item.volumeInfo)
     return volumeInfoArray.map(extractDataFromVolumeInfo).filter((book) => book)
   } catch (error) {
-    return []
+    throw new ApolloError('Failed to get book data')
   }
 }
 
@@ -29,12 +35,12 @@ const extractDataFromVolumeInfo = (data) => {
   if (!bookIds) return
   const isbn10 = bookIds.find((bookId) => bookId.type === 'ISBN_10')
   const isbn13 = bookIds.find((bookId) => bookId.type === 'ISBN_13')
-  if (!isbn10 && !isbn13) return
+  const bookId = isbn13 || isbn10
+  if (!bookId) return
   if (!data.title) return
 
   return {
-    isbn10: isbn10 && isbn10.identifier,
-    isbn13: isbn13 && isbn13.identifier,
+    bookId,
     title: data.title,
     subTitle: data.subtitle,
     description: data.description,

@@ -10,7 +10,6 @@
     "dev": "nodemon src/main.js"
   },
   "dependencies": {
-    "apollo-log": "^0.2.0",
     "apollo-server": "^2.10.1",
     "axios": "^0.19.2",
     "bcrypt": "^4.0.0",

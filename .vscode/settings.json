@@ -1,8 +1,0 @@
-{
-    "appService.zipIgnorePattern": [
-        "node_modules{,/**}",
-        ".vscode{,/**}"
-    ],
-    "appService.deploySubpath": "",
-    "appService.defaultWebAppToDeploy": "/subscriptions/b08febea-5472-4171-b730-1b6703e52bc8/resourceGroups/Bookii/providers/Microsoft.Web/sites/Bookii"
-}

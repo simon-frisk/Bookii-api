@@ -1,30 +1,24 @@
 type Query {
   signin(email: String!, password: String!): String!
   user(userId: ID): User
-  book(isbn10: String, isbn13: String): Book
+  book(bookId: String!): Book
   bookQuery(query: String!): [Book!]!
 }
 
 type Mutation {
   signup(user: UserInput!): String!
-  addFeedBook(
-    isbn10: String
-    isbn13: String
-    comment: String!
-    date: String!
-  ): UserFeedBook!
+  addFeedBook(bookId: String!, comment: String!, date: String!): UserFeedBook!
 }
 
 type User {
   _id: ID!
   email: String!
   name: String!
-  feedBooks(isbn10: String, isbn13: String): [UserFeedBook!]!
+  feedBooks(bookId: String): [UserFeedBook!]!
 }
 
 type UserFeedBook {
-  isbn10: String
-  isbn13: String
+  bookId: String!
   book: Book!
   comment: String!
   date: String!
@@ -37,8 +31,7 @@ input UserInput {
 }
 
 type Book {
-  isbn10: String
-  isbn13: String
+  bookId: String!
   title: String!
   subTitle: String
   description: String

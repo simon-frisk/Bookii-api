@@ -1,11 +1,14 @@
 const { ApolloServer } = require('apollo-server')
 const { importSchema } = require('graphql-import')
-const { ApolloLogExtension } = require('apollo-log')
 const connectDB = require('./util/db')
 const dotenv = require('dotenv')
 const jwt = require('jsonwebtoken-promisified')
 
 const PORT = process.env.PORT || 4000
+
+const { doesISBNBookIdsMatch } = require('./util/bookIdUtil')
+
+console.log(doesISBNBookIdsMatch('isbn10:9137149938', 'isbn13:9789137149936'))
 
 async function main() {
   if (process.env.NODE_ENV !== 'production') dotenv.config()
@@ -33,7 +36,6 @@ async function main() {
     typeDefs,
     resolvers,
     context,
-    extensions: [() => new ApolloLogExtension({})],
   })
 
   server.listen(PORT).then(({ url }) => {

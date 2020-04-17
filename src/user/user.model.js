@@ -1,8 +1,10 @@
 const { Schema, model } = require('mongoose')
 
 const FeedBook = new Schema({
-  isbn10: String,
-  isbn13: String,
+  bookId: {
+    type: String,
+    required: true,
+  },
   comment: String, //can be empty string
   date: {
     type: String,

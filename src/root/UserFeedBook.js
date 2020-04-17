@@ -1,7 +1,9 @@
 const { getBookDataFromISBN } = require('../util/bookdata')
+const { isBookIdTypeISBN } = require('../util/bookIdUtil')
 
 module.exports = {
   async book(userFeedBook) {
-    return await getBookDataFromISBN(userFeedBook.isbn10 || userFeedBook.isbn13)
+    if (isBookIdTypeISBN(userFeedBook.bookId))
+      return getBookDataFromISBN(userFeedBook.bookId)
   },
 }

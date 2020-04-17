@@ -6,6 +6,7 @@ const {
   getBookDataFromISBN,
   getBooksDataFromQuery,
 } = require('../util/bookdata')
+const { isBookIdTypeISBN } = require('../util/bookIdUtil')
 
 module.exports = {
   async signin(_, { email, password }) {
@@ -20,9 +21,10 @@ module.exports = {
     if (!userId) throw new AuthenticationError('Not authorized')
     return User.findById(searchedUserId || userId)
   },
-  async book(_, { isbn10, isbn13 }, userId) {
+  async book(_, { bookId }, userId) {
     if (!userId) throw new AuthenticationError('Not authorized')
-    return getBookDataFromISBN(isbn10 || isbn13)
+    if (isBookIdTypeISBN(userFeedBook.bookId))
+      return getBookDataFromISBN(userFeedBook.bookId)
   },
   async bookQuery(_, { query }, userId) {
     if (!userId) throw new AuthenticationError('Not authorized')
