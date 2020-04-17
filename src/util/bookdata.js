@@ -15,7 +15,7 @@ exports.getBookDataFromBookId = async (bookId) => {
     } catch (error) {
       throw new ApolloError('Failed to get book data')
     }
-  }
+  } else throw new ApolloError('Failed to get book data')
 }
 
 exports.getBooksDataFromQuery = async (query) => {

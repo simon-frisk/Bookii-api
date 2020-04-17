@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken-promisified')
 const User = require('../user/user.model')
 const { AuthenticationError, UserInputError } = require('apollo-server')
 const {
-  getBookDataFromISBN,
+  getBookDataFromBookId,
   getBooksDataFromQuery,
 } = require('../util/bookdata')
 const { isBookIdTypeISBN } = require('../util/bookIdUtil')
@@ -23,7 +23,7 @@ module.exports = {
   },
   async book(_, { bookId }, userId) {
     if (!userId) throw new AuthenticationError('Not authorized')
-    if (isBookIdTypeISBN(bookId)) return getBookDataFromISBN(bookId)
+    return getBookDataFromBookId(bookId)
   },
   async bookQuery(_, { query }, userId) {
     if (!userId) throw new AuthenticationError('Not authorized')
