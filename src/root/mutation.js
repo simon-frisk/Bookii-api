@@ -10,7 +10,7 @@ const checkAuth = require('../util/checkAuth')
 
 module.exports = {
   async addFeedBook(_, { bookId, comment, date }, { user }) {
-    checkAuth()
+    checkAuth(user)
     if (!bookId) throw new UserInputError('Invalid bookId')
     if (comment === undefined || comment === null)
       throw new UserInputError('Invalid comment')
@@ -25,7 +25,7 @@ module.exports = {
     return feedBook
   },
   async removeFeedBook(_, { _id }, { user }) {
-    checkAuth()
+    checkAuth(user)
     const toRemove = user.feedBooks.find((feedBook) => feedBook._id == _id)
     const toRemoveIndex = user.feedBooks.indexOf(toRemove)
     user.feedBooks.splice(toRemoveIndex, 1)
