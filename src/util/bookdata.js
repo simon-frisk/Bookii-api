@@ -26,7 +26,7 @@ exports.getBooksDataFromQuery = async (query) => {
     const volumeInfoArray = data.items.map((item) => item.volumeInfo)
     return volumeInfoArray.map(extractDataFromVolumeInfo).filter((book) => book)
   } catch (error) {
-    throw new ApolloError('Failed to get book data')
+    throw new ApolloError('Failed to fet book data')
   }
 }
 
@@ -35,10 +35,10 @@ const extractDataFromVolumeInfo = (data) => {
   if (!bookIds) return
   const isbn10 = bookIds.find((bookId) => bookId.type === 'ISBN_10')
   const isbn13 = bookIds.find((bookId) => bookId.type === 'ISBN_13')
+  if (!isbn13 && !isbn10) return
   const bookId = isbn13
     ? 'isbn13:' + isbn13.identifier
     : 'isbn10:' + isbn10.identifier
-  if (!bookId) return
   if (!data.title) return
 
   return {
