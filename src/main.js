@@ -6,10 +6,6 @@ const jwt = require('jsonwebtoken-promisified')
 
 const PORT = process.env.PORT || 4000
 
-const { doesISBNBookIdsMatch } = require('./util/bookIdUtil')
-
-console.log(doesISBNBookIdsMatch('isbn10:9137149938', 'isbn13:9789137149936'))
-
 async function main() {
   if (process.env.NODE_ENV !== 'production') dotenv.config()
 

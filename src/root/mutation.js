@@ -15,7 +15,6 @@ module.exports = {
     if (comment === undefined || comment === null)
       throw new UserInputError('Invalid comment')
     if (!date) throw new UserInputError('Invalid date')
-    const user = await User.findById(userId)
     const feedBook = {
       bookId,
       comment,
@@ -25,10 +24,8 @@ module.exports = {
     await user.save()
     return feedBook
   },
-  async removeFeedBook(_, { _id }, { userId }) {
+  async removeFeedBook(_, { _id }, { user }) {
     checkAuth()
-    const user = await User.findById(userId)
-    if (!user) throw new ApolloError()
     const toRemove = user.feedBooks.find((feedBook) => feedBook._id == _id)
     const toRemoveIndex = user.feedBooks.indexOf(toRemove)
     user.feedBooks.splice(toRemoveIndex, 1)

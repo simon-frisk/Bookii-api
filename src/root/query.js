@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken-promisified')
 const User = require('../user/user.model')
-const { AuthenticationError, UserInputError } = require('apollo-server')
+const { UserInputError } = require('apollo-server')
 const {
   getBookDataFromBookId,
   getBooksDataFromQuery,
