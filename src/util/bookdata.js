@@ -10,7 +10,7 @@ exports.getBookDataFromBookId = async (bookId) => {
           bookId
         )}`
       )
-      if (!data.items) return
+      if (!data.items) throw new Error()
       return extractDataFromVolumeInfo(data.items[0].volumeInfo)
     } catch (error) {
       throw new ApolloError('Failed to get book data')
