@@ -26,7 +26,7 @@ exports.getBooksDataFromQuery = async (query) => {
     const volumeInfoArray = data.items.map((item) => item.volumeInfo)
     return volumeInfoArray.map(extractDataFromVolumeInfo).filter((book) => book)
   } catch (error) {
-    throw new ApolloError('Failed to fet book data')
+    throw new ApolloError('Failed to get book data')
   }
 }
 
