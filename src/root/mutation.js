@@ -6,16 +6,16 @@ const {
   AuthenticationError,
   ApolloError,
 } = require('apollo-server')
+const checkAuth = require('../util/checkAuth')
 
 module.exports = {
-  async addFeedBook(_, { bookId, comment, date }, { userId }) {
-    if (!userId) throw new AuthenticationError('Not authorized')
+  async addFeedBook(_, { bookId, comment, date }, { user }) {
+    checkAuth()
     if (!bookId) throw new UserInputError('Invalid bookId')
     if (comment === undefined || comment === null)
       throw new UserInputError('Invalid comment')
     if (!date) throw new UserInputError('Invalid date')
     const user = await User.findById(userId)
-    if (!user) throw new ApolloError()
     const feedBook = {
       bookId,
       comment,
@@ -24,6 +24,16 @@ module.exports = {
     user.feedBooks.push(feedBook)
     await user.save()
     return feedBook
+  },
+  async removeFeedBook(_, { _id }, { userId }) {
+    checkAuth()
+    const user = await User.findById(userId)
+    if (!user) throw new ApolloError()
+    const toRemove = user.feedBooks.find((feedBook) => feedBook._id == _id)
+    const toRemoveIndex = user.feedBooks.indexOf(toRemove)
+    user.feedBooks.splice(toRemoveIndex, 1)
+    await user.save()
+    return toRemove
   },
   async signup(_, { user }) {
     await validateUser(user)

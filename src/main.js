@@ -28,7 +28,8 @@ async function main() {
     try {
       const token = req.headers.authorization.split(' ')[1]
       const { userId } = await jwt.verifyAsync(token, process.env.JWT_SECRET)
-      return { userId }
+      const user = await User.find(userId)
+      return { user }
     } catch (error) {}
   }
 

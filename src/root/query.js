@@ -6,7 +6,7 @@ const {
   getBookDataFromBookId,
   getBooksDataFromQuery,
 } = require('../util/bookdata')
-const { isBookIdTypeISBN } = require('../util/bookIdUtil')
+const checkAuth = require('../util/checkAuth')
 
 module.exports = {
   async signin(_, { email, password }) {
@@ -17,16 +17,17 @@ module.exports = {
       throw new UserInputError('Email or password not corrent')
     return jwt.signAsync({ userId: user._id }, process.env.JWT_SECRET)
   },
-  async user(_, { userId: searchedUserId }, { userId }) {
-    if (!userId) throw new AuthenticationError('Not authorized')
-    return User.findById(searchedUserId || userId)
+  async user(_, { userId: searchedUserId }, { user }) {
+    checkAuth(user)
+    if (searchedUserId) return User.findById(searchedUserId)
+    else return user
   },
-  async book(_, { bookId }, userId) {
-    if (!userId) throw new AuthenticationError('Not authorized')
+  async book(_, { bookId }, { user }) {
+    checkAuth(user)
     return getBookDataFromBookId(bookId)
   },
-  async bookQuery(_, { query }, userId) {
-    if (!userId) throw new AuthenticationError('Not authorized')
+  async bookQuery(_, { query }, { user }) {
+    checkAuth(user)
     return getBooksDataFromQuery(query)
   },
 }

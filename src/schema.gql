@@ -8,6 +8,7 @@ type Query {
 type Mutation {
   signup(user: UserInput!): String!
   addFeedBook(bookId: String!, comment: String!, date: String!): UserFeedBook!
+  removeFeedBook(_id: ID!): UserFeedBook!
 }
 
 type User {
@@ -18,6 +19,7 @@ type User {
 }
 
 type UserFeedBook {
+  _id: ID!
   bookId: String!
   book: Book!
   comment: String!
