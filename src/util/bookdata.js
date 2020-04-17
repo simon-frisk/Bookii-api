@@ -35,12 +35,14 @@ const extractDataFromVolumeInfo = (data) => {
   if (!bookIds) return
   const isbn10 = bookIds.find((bookId) => bookId.type === 'ISBN_10')
   const isbn13 = bookIds.find((bookId) => bookId.type === 'ISBN_13')
-  const bookId = isbn13 || isbn10
+  const bookId = isbn13
+    ? 'isbn13:' + isbn13.identifier
+    : 'isbn10:' + isbn10.identifier
   if (!bookId) return
   if (!data.title) return
 
   return {
-    bookId: bookId.identifier,
+    bookId: bookId,
     title: data.title,
     subTitle: data.subtitle,
     description: data.description,
