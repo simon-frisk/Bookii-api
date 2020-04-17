@@ -40,7 +40,7 @@ const extractDataFromVolumeInfo = (data) => {
   if (!data.title) return
 
   return {
-    bookId,
+    bookId: bookId.identifier,
     title: data.title,
     subTitle: data.subtitle,
     description: data.description,
