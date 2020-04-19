@@ -15,6 +15,7 @@ const User = new Schema({
     required: true,
   },
   feedBooks: [FeedBook],
+  profilePicturePath: String,
 })
 
 module.exports = model('User', User)
