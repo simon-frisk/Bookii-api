@@ -29,7 +29,8 @@ module.exports = {
     }
     if (password) {
       validatePassword(password)
-      user.password = password
+      const encryptedPassword = await bcrypt.hash(password, 10)
+      user.password = encryptedPassword
     }
     if (name) {
       validateName(name)
