@@ -1,4 +1,4 @@
-const { isBookIdTypeISBN, doesISBNBookIdsMatch } = require('../util/bookIdUtil')
+const { isBookIdTypeISBN, doesISBNBookIdsMatch } = require('../book/bookIdUtil')
 
 module.exports = {
   async feedBooks(user, { bookId }) {

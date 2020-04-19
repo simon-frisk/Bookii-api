@@ -1,5 +1,4 @@
 const { ApolloServer } = require('apollo-server')
-const { importSchema } = require('graphql-import')
 const connectDB = require('./util/db')
 const dotenv = require('dotenv')
 const jwt = require('jsonwebtoken-promisified')
@@ -12,12 +11,17 @@ async function main() {
 
   await connectDB()
 
-  const typeDefs = await importSchema('./src/schema.gql')
+  const typeDefs = [
+    require('./book/book.schema'),
+    require('./feedbook/feedbook.schema'),
+    require('./user/user.schema'),
+    require('./root/schema'),
+  ]
 
   const resolvers = {
     Query: require('./root/query'),
     Mutation: require('./root/mutation'),
-    UserFeedBook: require('./root/UserFeedBook'),
+    FeedBook: require('./feedbook/feedbook.resolver'),
     User: require('./user/user.resolver'),
   }
 

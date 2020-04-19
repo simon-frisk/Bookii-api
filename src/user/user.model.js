@@ -1,16 +1,5 @@
 const { Schema, model } = require('mongoose')
-
-const FeedBook = new Schema({
-  bookId: {
-    type: String,
-    required: true,
-  },
-  comment: String, //can be empty string
-  date: {
-    type: String,
-    required: true,
-  },
-})
+const FeedBook = require('../feedbook/feedbook.model')
 
 const User = new Schema({
   email: {
