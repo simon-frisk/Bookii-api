@@ -6,7 +6,7 @@ type Query {
 }
 
 type Mutation {
-  signup(user: UserInput!): String!
+  signup(user: SignUpInput!): String!
   addFeedBook(bookId: String!, comment: String!, date: String!): UserFeedBook!
   removeFeedBook(_id: ID!): UserFeedBook!
 }
@@ -16,6 +16,7 @@ type User {
   email: String!
   name: String!
   feedBooks(bookId: String): [UserFeedBook!]!
+  profilePicture: File
 }
 
 type UserFeedBook {
@@ -26,10 +27,17 @@ type UserFeedBook {
   date: String!
 }
 
-input UserInput {
+input SignUpInput {
   email: String!
   name: String!
   password: String!
+}
+
+input UserUpdateInput {
+  email: String
+  name: String
+  password: String
+  profilepicture: Upload
 }
 
 type Book {

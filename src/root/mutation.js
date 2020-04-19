@@ -1,11 +1,7 @@
 const User = require('../user/user.model')
 const jwt = require('jsonwebtoken-promisified')
 const bcrypt = require('bcrypt')
-const {
-  UserInputError,
-  AuthenticationError,
-  ApolloError,
-} = require('apollo-server')
+const { UserInputError } = require('apollo-server')
 const checkAuth = require('../util/checkAuth')
 
 module.exports = {
