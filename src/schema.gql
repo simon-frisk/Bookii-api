@@ -16,7 +16,7 @@ type User {
   email: String!
   name: String!
   feedBooks(bookId: String): [UserFeedBook!]!
-  profilePicture: File
+  profilePicture: String
 }
 
 type UserFeedBook {
