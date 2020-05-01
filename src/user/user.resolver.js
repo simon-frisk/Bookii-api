@@ -7,8 +7,6 @@ module.exports = {
           doesISBNBookIdsMatch(feedBook.bookId, bookId)
         )
       : user.feedBooks
-    ).sort(
-      (a, b) => new Date(b.readDate).getTime() - new Date(a.readDate).getTime()
-    )
+    ).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
   },
 }
