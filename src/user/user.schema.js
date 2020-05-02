@@ -6,7 +6,7 @@ module.exports = gql`
     email: String!
     name: String!
     feedBooks(bookId: String): [FeedBook!]!
-    profilePicture: String
+    profilePicturePath: String
   }
 
   input SignUpInput {
@@ -19,6 +19,6 @@ module.exports = gql`
     email: String
     name: String
     password: String
-    profilepicture: Upload
+    profilePicture: Upload
   }
 `

@@ -10,12 +10,14 @@
     "dev": "nodemon src/main.js"
   },
   "dependencies": {
+    "@azure/storage-blob": "^12.1.1",
     "apollo-server": "^2.10.1",
     "axios": "^0.19.2",
     "bcrypt": "^4.0.0",
     "dotenv": "^8.2.0",
     "graphql": "^14.6.0",
     "jsonwebtoken-promisified": "^1.0.3",
+    "mime-types": "^2.1.27",
     "mongoose": "^5.9.2"
   },
   "devDependencies": {
