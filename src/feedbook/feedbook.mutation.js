@@ -17,6 +17,15 @@ module.exports = {
     await user.save()
     return feedBook
   },
+  async updateFeedBook(_, { _id, comment, date }, { user }) {
+    checkAuth(user)
+    const toUpdate = user.feedBooks.find((feedBook) => feedBook._id == _id)
+    const toUpdateIndex = user.feedBooks.indexOf(toUpdate)
+    if (comment) user.feedBooks[toUpdateIndex].comment = comment
+    if (date) user.feedBooks[toUpdateIndex].date = date
+    await user.save()
+    return user.feedBooks[toUpdateIndex]
+  },
   async removeFeedBook(_, { _id }, { user }) {
     checkAuth(user)
     const toRemove = user.feedBooks.find((feedBook) => feedBook._id == _id)
