@@ -11,6 +11,7 @@ module.exports = gql`
   type Mutation {
     signup(user: SignUpInput!): String!
     updateUser(user: UserUpdateInput!): User!
+
     addFeedBook(bookId: String!, comment: String!, date: String!): FeedBook!
     removeFeedBook(_id: ID!): FeedBook!
     updateFeedBook(_id: ID!, comment: String, date: String): FeedBook!

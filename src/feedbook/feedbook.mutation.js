@@ -19,18 +19,16 @@ module.exports = {
   },
   async updateFeedBook(_, { _id, comment, date }, { user }) {
     checkAuth(user)
-    const toUpdate = user.feedBooks.find((feedBook) => feedBook._id == _id)
-    const toUpdateIndex = user.feedBooks.indexOf(toUpdate)
-    if (comment) user.feedBooks[toUpdateIndex].comment = comment
-    if (date) user.feedBooks[toUpdateIndex].date = date
+    const toUpdate = user.feedBooks.id(_id)
+    if (comment) toUpdate.comment = comment
+    if (date) toUpdate.date = date
     await user.save()
-    return user.feedBooks[toUpdateIndex]
+    return toUpdate
   },
   async removeFeedBook(_, { _id }, { user }) {
     checkAuth(user)
-    const toRemove = user.feedBooks.find((feedBook) => feedBook._id == _id)
-    const toRemoveIndex = user.feedBooks.indexOf(toRemove)
-    user.feedBooks.splice(toRemoveIndex, 1)
+    const toRemove = user.feedBooks.id(_id)
+    toRemove.remove()
     await user.save()
     return toRemove
   },

@@ -15,7 +15,16 @@ const User = new Schema({
     required: true,
   },
   feedBooks: [FeedBook],
-  profilePicturePath: String,
+  profilePicturePath: {
+    type: String,
+    get: (profilePictureName) =>
+      `https://bookistorage.blob.core.windows.net/profilepictures/${profilePictureName}`,
+    set: (profilePicturePath) =>
+      profilePicturePath.replace(
+        'https://bookistorage.blob.core.windows.net/profilepictures/',
+        ''
+      ),
+  },
 })
 
 module.exports = model('User', User)
