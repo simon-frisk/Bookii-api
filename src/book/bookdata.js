@@ -10,7 +10,7 @@ exports.getBookDataFromBookId = async (bookId) => {
           bookId
         )}`
       )
-      if (!data.items) throw new Error()
+      if (!data.items) return
       return extractDataFromVolumeInfo(data.items[0].volumeInfo)
     } catch (error) {
       throw new ApolloError('Failed to get book data')
@@ -19,10 +19,12 @@ exports.getBookDataFromBookId = async (bookId) => {
 }
 
 exports.getBooksDataFromQuery = async (query) => {
+  if (!query) return []
   try {
     const { data } = await axios.get(
       `https://www.googleapis.com/books/v1/volumes?q=${query}&maxResults=40`
     )
+    if (data.totalItems === 0) return []
     const volumeInfoArray = data.items.map((item) => item.volumeInfo)
     return volumeInfoArray.map(extractDataFromVolumeInfo).filter((book) => book)
   } catch (error) {
