@@ -2,6 +2,7 @@ const { ApolloServer } = require('apollo-server')
 const connectDB = require('./util/db')
 const dotenv = require('dotenv')
 const jwt = require('jsonwebtoken-promisified')
+const typeDefs = require('./schema')
 const User = require('./user/user.model')
 
 const PORT = process.env.PORT || 4000
@@ -10,13 +11,6 @@ async function main() {
   if (process.env.NODE_ENV !== 'production') dotenv.config()
 
   await connectDB()
-
-  const typeDefs = [
-    require('./book/book.schema'),
-    require('./feedbook/feedbook.schema'),
-    require('./user/user.schema'),
-    require('./root/schema'),
-  ]
 
   const resolvers = {
     Query: require('./root/query'),
