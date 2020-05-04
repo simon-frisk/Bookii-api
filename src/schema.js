@@ -28,9 +28,9 @@ module.exports = gql`
   type FeedBook {
     _id: ID!
     bookId: String!
-    book: Book!
     comment: String!
     date: String!
+    book: Book
   }
 
   type Book {

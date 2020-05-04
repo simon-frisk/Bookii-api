@@ -10,21 +10,25 @@ module.exports = {
     } catch (error) {
       dbError(error)
     }
-    return feedBook
+    return user.feedBooks[user.feedBooks.length - 1]
   },
   async updateFeedBook(_, { _id, comment, date }, { user }) {
     checkAuth(user)
     const toUpdate = user.feedBooks.id(_id)
     if (comment) toUpdate.comment = comment
     if (date) toUpdate.date = date
-    await user.save()
+    try {
+      await user.save()
+    } catch (error) {
+      dbError(error)
+    }
     return toUpdate
   },
   async removeFeedBook(_, { _id }, { user }) {
     checkAuth(user)
     const toRemove = user.feedBooks.id(_id)
     toRemove.remove()
-    await user.save()
+    user.save()
     return toRemove
   },
 }
