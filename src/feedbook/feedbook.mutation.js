@@ -1,20 +1,15 @@
-const { UserInputError } = require('apollo-server')
 const checkAuth = require('../util/checkAuth')
+const dbError = require('../util/dbError')
 
 module.exports = {
-  async addFeedBook(_, { bookId, comment, date }, { user }) {
+  async addFeedBook(_, feedBook, { user }) {
     checkAuth(user)
-    if (!bookId) throw new UserInputError('Invalid bookId')
-    if (comment === undefined || comment === null)
-      throw new UserInputError('Invalid comment')
-    if (!date) throw new UserInputError('Invalid date')
-    const feedBook = {
-      bookId,
-      comment,
-      date,
-    }
     user.feedBooks.push(feedBook)
-    await user.save()
+    try {
+      await user.save()
+    } catch (error) {
+      dbError(error)
+    }
     return feedBook
   },
   async updateFeedBook(_, { _id, comment, date }, { user }) {

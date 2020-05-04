@@ -1,13 +1,24 @@
 const { Schema } = require('mongoose')
+const { isBookId } = require('../book/bookIdUtil')
 
 module.exports = new Schema({
   bookId: {
     type: String,
-    required: true,
+    required: [true, 'BookId required'],
+    validate: [isBookId, 'BookId not valid'],
   },
-  comment: String, //can be empty string
+  comment: {
+    type: String,
+    validate: [
+      (comment) => {
+        if (comment === undefined || comment === null) return false
+      },
+      'Comment can be empty but not undefined',
+    ],
+  },
   date: {
     type: String,
-    required: true,
+    required: [true, 'Date required'],
+    //TODO: validate to check that is date
   },
 })

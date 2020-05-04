@@ -1,15 +1,22 @@
+exports.isBookId = (bookId) => {
+  if (!bookId) return false
+  if (!(bookId.split(':').length === 2)) return false
+  //TODO: add more to check if valid
+  return true
+}
+
 exports.getBookIdType = (bookId) => {
-  if (!bookId) return
+  if (!this.isBookId(bookId)) return
   return bookId.split(':')[0]
 }
 
 exports.getBookIdValue = (bookId) => {
-  if (!bookId) return
+  if (!this.isBookId(bookId)) return
   return bookId.split(':')[1]
 }
 
 exports.isBookIdTypeISBN = (bookId) => {
-  if (!bookId) return false
+  if (!this.isBookId(bookId)) return false
   return this.getBookIdType(bookId).startsWith('isbn')
 }
 

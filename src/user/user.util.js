@@ -13,8 +13,9 @@ exports.validateName = (name) => {
   if (nameRegex.test(name)) return true
   return false
 }
-exports.validateEmailNotTaken = async (email) => {
-  if (await model('User').findOne({ email })) return false
+exports.validateEmailNotTaken = async function (email) {
+  const user = await model('User').findOne({ email })
+  if (user._id.toString() !== this._id.toString()) return false
   return true
 }
 exports.validateEmail = (email) => {

@@ -41,7 +41,11 @@ module.exports = {
       const url = `https://bookistorage.blob.core.windows.net/profilepictures/${fileName}`
       user.profilePicturePath = url
     }
-    user.save()
+    try {
+      await user.save()
+    } catch (error) {
+      dbError(error)
+    }
     return user
   },
 }
