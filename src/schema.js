@@ -5,7 +5,7 @@ module.exports = gql`
     signin(email: String!, password: String!): String!
     user(userId: ID): User
     book(bookId: String!): Book
-    bookQuery(query: String!): [Book!]!
+    bookSearch(query: String!): [Book!]!
   }
 
   type Mutation {
@@ -21,7 +21,7 @@ module.exports = gql`
     _id: ID!
     email: String!
     name: String!
-    feedBooks(bookId: String): [FeedBook!]!
+    feedBooks(bookId: String, _id: ID): [FeedBook!]!
     profilePicturePath: String
   }
 

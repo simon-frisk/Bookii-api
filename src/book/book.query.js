@@ -11,7 +11,7 @@ module.exports = {
     checkAuth(user)
     return getBookDataFromBookId(bookId)
   },
-  async bookQuery(_, { query }, { user }) {
+  async bookSearch(_, { query }, { user }) {
     checkAuth(user)
     return getBooksDataFromQuery(query)
   },
