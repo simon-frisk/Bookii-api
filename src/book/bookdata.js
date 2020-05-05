@@ -34,7 +34,6 @@ exports.getBooksDataFromQuery = async query => {
 }
 
 const extractDataFromVolumeInfo = data => {
-  console.log(data)
   const bookIds = data.industryIdentifiers
   if (!bookIds) return
   const isbn10 = bookIds.find(bookId => bookId.type === 'ISBN_10')
