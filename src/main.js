@@ -35,6 +35,7 @@ async function main() {
     resolvers,
     context,
     formatError: error => {
+      console.log(error)
       if (
         error instanceof ApolloError ||
         error.originalError instanceof ApolloError
