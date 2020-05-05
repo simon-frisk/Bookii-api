@@ -1,4 +1,6 @@
-const { ApolloServer } = require('apollo-server')
+const { ApolloServer, ApolloError, UserInputError } = require('apollo-server')
+const { GraphQLError } = require('graphql')
+const mongoose = require('mongoose')
 const connectDB = require('./util/db')
 const dotenv = require('dotenv')
 const jwt = require('jsonwebtoken-promisified')
@@ -32,6 +34,22 @@ async function main() {
     typeDefs,
     resolvers,
     context,
+    formatError: error => {
+      if (
+        error instanceof ApolloError ||
+        error.originalError instanceof ApolloError
+      ) {
+        return error
+      } else if (error.originalError instanceof mongoose.Error) {
+        if (error.originalError.errors) {
+          const errors = []
+          for (let e in error.originalError.errors) {
+            errors.push(error.originalError.errors[e].message)
+          }
+          return new ApolloError(errors.join(', '))
+        }
+      } else return new GraphQLError('Unknown error occured')
+    },
   })
 
   server.listen(PORT).then(({ url }) => {

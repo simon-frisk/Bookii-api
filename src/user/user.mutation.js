@@ -3,16 +3,11 @@ const jwt = require('jsonwebtoken-promisified')
 const checkAuth = require('../util/checkAuth')
 const { BlobServiceClient } = require('@azure/storage-blob')
 const mimeTypes = require('mime-types')
-const dbError = require('../util/dbError')
 
 module.exports = {
   async signup(_, { user: userData }) {
-    try {
-      const user = await new User(userData).save()
-      return jwt.signAsync({ userId: user._id }, process.env.JWT_SECRET)
-    } catch (error) {
-      dbError(error)
-    }
+    const user = await new User(userData).save()
+    return jwt.signAsync({ userId: user._id }, process.env.JWT_SECRET)
   },
 
   async updateUser(
@@ -41,11 +36,7 @@ module.exports = {
       const url = `https://bookistorage.blob.core.windows.net/profilepictures/${fileName}`
       user.profilePicturePath = url
     }
-    try {
-      await user.save()
-    } catch (error) {
-      dbError(error)
-    }
+    await user.save()
     return user
   },
 }

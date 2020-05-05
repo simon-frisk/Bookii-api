@@ -1,15 +1,10 @@
 const checkAuth = require('../util/checkAuth')
-const dbError = require('../util/dbError')
 
 module.exports = {
   async addFeedBook(_, feedBook, { user }) {
     checkAuth(user)
     user.feedBooks.push(feedBook)
-    try {
-      await user.save()
-    } catch (error) {
-      dbError(error)
-    }
+    await user.save()
     return user.feedBooks[user.feedBooks.length - 1]
   },
   async updateFeedBook(_, { _id, comment, date }, { user }) {
@@ -17,11 +12,7 @@ module.exports = {
     const toUpdate = user.feedBooks.id(_id)
     if (comment) toUpdate.comment = comment
     if (date) toUpdate.date = date
-    try {
-      await user.save()
-    } catch (error) {
-      dbError(error)
-    }
+    await user.save()
     return toUpdate
   },
   async removeFeedBook(_, { _id }, { user }) {
