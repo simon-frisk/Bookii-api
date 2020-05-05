@@ -6,7 +6,7 @@ module.exports = gql`
     user(userId: ID): User
     book(bookId: String!): Book
     bookSearch(query: String!): [Book!]!
-    nytimesBestSellers(list: String!): [Book!]!
+    nytimesBestSellers: [BookList!]!
   }
 
   type Mutation {
@@ -44,6 +44,11 @@ module.exports = gql`
     publisher: String
     published: String
     thumbnail: String
+  }
+
+  type BookList {
+    name: String!
+    books: [Book!]!
   }
 
   input SignUpInput {
