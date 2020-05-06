@@ -11,13 +11,13 @@ module.exports = {
     const correctPassword = await bcrypt.compare(password, user.password)
     if (!correctPassword)
       throw new UserInputError('Email or password not corrent')
-    return jwt.signAsync({ userId: user._id }, process.env.JWT_SECRET)
+    return jwt.signAsync({ _id: user._id }, process.env.JWT_SECRET)
   },
-  async user(_, { userId: searchedUserId }, { user }) {
+  async user(_, { _id: searchedId }, { user }) {
     checkAuth(user)
     try {
-      if (searchedUserId) {
-        const user = await User.findById(searchedUserId)
+      if (searchedId) {
+        const user = await User.findById(searchedId)
         return user
       }
     } catch (err) {
@@ -25,8 +25,9 @@ module.exports = {
     }
     return user
   },
-  async users(_, __, { user }) {
-    checkAuth(user)
-    return User.find()
+  async users(_, __, { user: me }) {
+    checkAuth(me)
+    const users = await User.find()
+    return users.filter(user => user._id.toString() !== me._id.toString())
   },
 }

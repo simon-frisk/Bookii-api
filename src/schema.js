@@ -3,7 +3,7 @@ const { gql } = require('apollo-server')
 module.exports = gql`
   type Query {
     signin(email: String!, password: String!): String!
-    user(userId: ID): User
+    user(_id: ID): User
     book(bookId: String!): Book
     bookSearch(query: String!): [Book!]!
     nytimesBestSellers: [BookList!]!
@@ -17,6 +17,9 @@ module.exports = gql`
     addFeedBook(bookId: String!, comment: String!, date: String!): FeedBook!
     removeFeedBook(_id: ID!): FeedBook!
     updateFeedBook(_id: ID!, comment: String, date: String): FeedBook!
+
+    follow(_id: ID!): User!
+    unfollow(_id: ID!): User!
   }
 
   type User {
@@ -25,6 +28,7 @@ module.exports = gql`
     name: String!
     feedBooks(bookId: String, _id: ID): [FeedBook!]!
     profilePicturePath: String
+    following: [User!]!
   }
 
   type FeedBook {

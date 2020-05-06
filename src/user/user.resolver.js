@@ -13,4 +13,8 @@ module.exports = {
     )
     return feedBooks
   },
+  async following(user) {
+    const populated = await user.populate('following').execPopulate()
+    return populated.following
+  },
 }

@@ -3,11 +3,12 @@ const jwt = require('jsonwebtoken-promisified')
 const checkAuth = require('../util/checkAuth')
 const { BlobServiceClient } = require('@azure/storage-blob')
 const mimeTypes = require('mime-types')
+const { UserInputError } = require('apollo-server')
 
 module.exports = {
   async signup(_, { user: userData }) {
     const user = await new User(userData).save()
-    return jwt.signAsync({ userId: user._id }, process.env.JWT_SECRET)
+    return jwt.signAsync({ _id: user._id }, process.env.JWT_SECRET)
   },
 
   async updateUser(
@@ -38,5 +39,28 @@ module.exports = {
     }
     await user.save()
     return user
+  },
+  async follow(_, { _id }, { user }) {
+    checkAuth(user)
+    //TODO: validate _id is an objectId (and do this in all other similar places too. Otherwise this will throw an internal server error instead of userinputerror)
+    const followed = await User.findById(_id)
+    if (!followed) throw new UserInputError('The user to follow does not exist')
+    if (user.following.find(f => f.toString() === _id.toString()))
+      return new UserInputError('The user to follow is already followed')
+    user.following.push(_id)
+    await user.save()
+    return followed
+  },
+  async unfollow(_, { _id }, { user }) {
+    checkAuth(user)
+    const followed = await User.findById(_id)
+    if (!followed)
+      throw new UserInputError('The user to unfollow does not exist')
+    const lengthBefore = user.following.length
+    user.following = user.following.filter(f => f.toString() !== _id.toString())
+    if (lengthBefore === user.following.length)
+      throw new UserInputError('The user to unfollow is not followed')
+    await user.save()
+    return followed
   },
 }

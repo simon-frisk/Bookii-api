@@ -32,6 +32,12 @@ const User = new Schema({
     set: setPassword,
     minlength: [6, 'Password has to be at least 6 characters'],
   },
+  following: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+    },
+  ],
   feedBooks: [FeedBook],
   profilePicturePath: {
     type: String,
