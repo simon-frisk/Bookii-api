@@ -36,13 +36,6 @@ const User = new Schema({
   profilePicturePath: {
     type: String,
     //TODO: validate profilePicturePath
-    get: (profilePictureName) =>
-      `https://bookistorage.blob.core.windows.net/profilepictures/${profilePictureName}`,
-    set: (profilePicturePath) =>
-      profilePicturePath.replace(
-        'https://bookistorage.blob.core.windows.net/profilepictures/',
-        ''
-      ),
   },
 })
 

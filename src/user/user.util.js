@@ -1,7 +1,7 @@
 const { model } = require('mongoose')
 const bcrypt = require('bcrypt')
 
-exports.setName = (name) => {
+exports.setName = name => {
   if (!this.validateName) return name
   const firstNameLetters = name.split(' ')[0].toLowerCase().split('')
   firstNameLetters[0] = firstNameLetters[0].toUpperCase()
@@ -9,21 +9,21 @@ exports.setName = (name) => {
   lastNameLetters[0] = lastNameLetters[0].toUpperCase()
   return firstNameLetters.join('').concat(' ', lastNameLetters.join(''))
 }
-exports.validateName = (name) => {
+exports.validateName = name => {
   if (nameRegex.test(name)) return true
   return false
 }
 exports.validateEmailNotTaken = async function (email) {
   const user = await model('User').findOne({ email })
-  if (user._id.toString() !== this._id.toString()) return false
+  if (user && user._id.toString() !== this._id.toString()) return false
   return true
 }
-exports.validateEmail = (email) => {
+exports.validateEmail = email => {
   if (emailRegex.test(email)) return true
   return false
 }
 
-exports.setPassword = (password) => {
+exports.setPassword = password => {
   if (password.length < 6) return '-'
   const hash = bcrypt.hashSync(password, 10)
   return hash
