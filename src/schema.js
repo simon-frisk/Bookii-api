@@ -7,6 +7,7 @@ module.exports = gql`
     book(bookId: String!): Book
     bookSearch(query: String!): [Book!]!
     nytimesBestSellers: [BookList!]!
+    users: [User!]!
   }
 
   type Mutation {

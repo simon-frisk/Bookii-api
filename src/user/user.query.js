@@ -25,4 +25,8 @@ module.exports = {
     }
     return user
   },
+  async users(_, __, { user }) {
+    checkAuth(user)
+    return User.find()
+  },
 }
