@@ -38,6 +38,12 @@ const User = new Schema({
       ref: 'User',
     },
   ],
+  followers: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+    },
+  ],
   feedBooks: [FeedBook],
   profilePicturePath: {
     type: String,

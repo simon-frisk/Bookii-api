@@ -49,6 +49,8 @@ module.exports = {
       return new UserInputError('The user to follow is already followed')
     user.following.push(_id)
     await user.save()
+    followed.followers.push(user._id)
+    await followed.save()
     return followed
   },
   async unfollow(_, { _id }, { user }) {
@@ -61,6 +63,10 @@ module.exports = {
     if (lengthBefore === user.following.length)
       throw new UserInputError('The user to unfollow is not followed')
     await user.save()
+    followed.followers = followed.followers.filter(
+      f => f.toString() !== user._id.toString()
+    )
+    await followed.save()
     return followed
   },
 }

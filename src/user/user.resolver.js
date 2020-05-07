@@ -17,4 +17,8 @@ module.exports = {
     const populated = await user.populate('following').execPopulate()
     return populated.following
   },
+  async followers(user) {
+    const populated = await user.populate('followers').execPopulate()
+    return populated.followers
+  },
 }

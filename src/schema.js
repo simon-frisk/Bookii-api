@@ -30,6 +30,7 @@ module.exports = gql`
     feedBooks(bookId: String, _id: ID): [FeedBook!]!
     profilePicturePath: String
     following: [User!]!
+    followers: [User!]!
   }
 
   type FeedBook {
