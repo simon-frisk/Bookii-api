@@ -34,6 +34,7 @@ async function main() {
     typeDefs,
     resolvers,
     context,
+    tracing: true,
     formatError: error => {
       console.log(error)
       if (
