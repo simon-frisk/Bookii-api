@@ -12,9 +12,9 @@ module.exports = {
     checkAuth(user)
     return getBookDataFromBookId(bookId)
   },
-  async bookSearch(_, { query }, { user }) {
+  async bookSearch(_, { query, page }, { user }) {
     checkAuth(user)
-    return getBooksDataFromQuery(query)
+    return getBooksDataFromQuery(query, page)
   },
   async nytimesBestSellers(_, __, { user }) {
     checkAuth(user)
