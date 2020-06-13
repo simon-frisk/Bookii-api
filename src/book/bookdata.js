@@ -47,10 +47,20 @@ const extractDataFromVolumeInfo = data => {
 
   if (!data.title) return
 
+  let title, subTitle
+  if (data.title.includes(':') && !data.subTitle) {
+    const index = data.title.indexOf(':')
+    const title = data.title.slice(0, index)
+    const subTitle = data.title.slice(index)
+  } else {
+    title = data.title
+    subTitle = data.subTitle
+  }
+
   return {
     bookId: bookId,
-    title: data.title,
-    subTitle: data.subtitle,
+    title,
+    subTitle,
     description: data.description,
     authors: data.authors,
     pages: data.pageCount,
