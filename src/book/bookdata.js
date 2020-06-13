@@ -48,13 +48,13 @@ const extractDataFromVolumeInfo = data => {
   if (!data.title) return
 
   let title, subTitle
-  if (data.title.includes(':') && !data.subTitle) {
+  if (data.title.includes(':') && !data.subtitle) {
     const index = data.title.indexOf(':')
-    const title = data.title.slice(0, index)
-    const subTitle = data.title.slice(index)
+    title = data.title.slice(0, index).trim()
+    subTitle = data.title.slice(index + 1, -1).trim()
   } else {
     title = data.title
-    subTitle = data.subTitle
+    subTitle = data.subtitle
   }
 
   return {
