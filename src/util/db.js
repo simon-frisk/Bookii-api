@@ -8,6 +8,6 @@ module.exports = async () => {
     })
     .then(
       () => console.log('Connected to database'),
-      (err) => console.error(err)
+      err => console.error(err)
     )
 }
