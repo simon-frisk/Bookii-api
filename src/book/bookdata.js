@@ -19,13 +19,11 @@ exports.getBookDataFromBookId = async bookId => {
   return
 }
 
-exports.getBooksDataFromQuery = async (query, page) => {
+exports.getBooksDataFromQuery = async query => {
   if (!query) return []
   try {
     const { data } = await axios.get(
-      `https://www.googleapis.com/books/v1/volumes?q=${query}&maxResults=10&startIndex=${
-        page * 10 || 0
-      }`
+      `https://www.googleapis.com/books/v1/volumes?q=${query}&maxResults=40`
     )
     if (data.totalItems === 0) return []
     const volumeInfoArray = data.items.map(item => item.volumeInfo)
@@ -51,7 +49,7 @@ const extractDataFromVolumeInfo = data => {
   if (data.title.includes(':') && !data.subtitle) {
     const index = data.title.indexOf(':')
     title = data.title.slice(0, index).trim()
-    subTitle = data.title.slice(index + 1, -1).trim()
+    subTitle = data.title.slice(index + 1).trim()
   } else {
     title = data.title
     subTitle = data.subtitle

@@ -5,7 +5,7 @@ module.exports = gql`
     signin(email: String!, password: String!): String!
     user(_id: ID): User
     book(bookId: String!): Book
-    bookSearch(query: String!, page: Int): [Book!]!
+    bookSearch(query: String!): [Book!]!
     nytimesBestSellers: [BookList!]!
     users: [User!]!
     feed(after: ID): [FeedBook!]!
