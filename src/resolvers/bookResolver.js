@@ -16,4 +16,10 @@ module.exports = {
       return bookData.getNYTBestSellers()
     },
   },
+  Book: {
+    async wikipediadescription(book) {
+      const author = book.authors ? book.authors[0] : null
+      return bookData.getWikipediaDescription(book.title, author)
+    },
+  },
 }

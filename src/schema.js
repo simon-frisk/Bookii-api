@@ -52,6 +52,7 @@ module.exports = gql`
     publisher: String
     published: String
     thumbnail: String
+    wikipediadescription: String
   }
 
   type BookList {
