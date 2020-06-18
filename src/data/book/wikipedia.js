@@ -2,24 +2,18 @@ const axios = require('axios')
 
 module.exports = async (title, author) => {
   try {
-    const articleDataArray = await getArticleArray(title)
-    const articlePoints = articleDataArray.map(article => {
-      if (article.includes(title)) {
-        if (article.includes(author)) {
-          return getKeywordPoint(article)
-        }
-      }
-      return null
-    })
-    let bestArticleIndex = null
-    articlePoints.forEach((point, index) => {
-      if (
-        (point !== null && point > articlePoints[bestArticleIndex]) ||
-        bestArticleIndex === null
-      )
-        bestArticleIndex = index
-    })
-    return articleDataArray[bestArticleIndex]
+    let articles = await getArticles(title)
+
+    articles = articles
+      .filter(article => article.includes(title))
+      .filter(article => article.includes(author))
+      .filter(article => hasBookKeywords(article))
+
+    articles.sort(
+      (a1, a2) => numberOtherBookKeywords(a2) - numberOtherBookKeywords(a1)
+    )
+
+    return articles[0]
   } catch (error) {
     return null
   }
@@ -33,7 +27,7 @@ function createDataUrl(pageid) {
   return `http://en.wikipedia.org/w/api.php?action=query&pageids=${pageid}&prop=extracts&explaintext=true&exintro=true&format=json`
 }
 
-async function getArticleArray(title) {
+async function getArticles(title) {
   const searchResult = await axios.get(createSearchUrl(title))
   const articleIds = searchResult.data.query.search.map(res => res.pageid)
   const dataResult = await Promise.all(
@@ -46,18 +40,15 @@ async function getArticleArray(title) {
   )
 }
 
-function getKeywordPoint(article) {
-  const keywords = [
-    'book',
-    'novel',
-    'memoir',
-    'published',
-    'publisher',
-    'author',
-    'isbn',
-  ]
-  return keywords.reduce((points, keyword) => {
-    if (article.includes(keyword)) return points + 1
-    return points
-  }, 0)
+function hasBookKeywords(article) {
+  const keywords = ['book', 'novel', 'memoir']
+  return keywords.map(keyword => article.includes(keyword)).includes(true)
+}
+
+function numberOtherBookKeywords(article) {
+  const keywords = ['author', 'published', 'publisher', 'isbn', 'written']
+  const num = keywords.filter(keyword => article.includes(keyword)).length
+
+  console.log(article, num)
+  return num
 }

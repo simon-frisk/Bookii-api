@@ -6,8 +6,14 @@ const dotenv = require('dotenv')
 const jwt = require('jsonwebtoken-promisified')
 const typeDefs = require('./schema')
 const User = require('./user/user.model')
+const wikipedia = require('./data/book/wikipedia')
 
 const PORT = process.env.PORT || 4000
+
+wikipedia(
+  'Hands-On Machine Learning with Scikit-Learn, Keras, and TensorFlow',
+  'Aurélien Géron'
+)
 
 async function main() {
   if (process.env.NODE_ENV !== 'production') dotenv.config()
