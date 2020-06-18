@@ -1,23 +1,19 @@
-const {
-  getBookDataFromBookId,
-  getBooksDataFromQuery,
-} = require('../data/bookdata')
-const getNytimesBestSellersLists = require('../data/nyTimesBestSellers')
+const bookData = require('../data/book/bookData')
 const checkAuth = require('../util/checkAuth')
 
 module.exports = {
   Query: {
     async book(_, { bookId }, { user }) {
       checkAuth(user)
-      return getBookDataFromBookId(bookId)
+      return bookData.getByBookId(bookId)
     },
     async bookSearch(_, { query }, { user }) {
       checkAuth(user)
-      return getBooksDataFromQuery(query)
+      return bookData.getByQuery(query)
     },
     async nytimesBestSellers(_, __, { user }) {
       checkAuth(user)
-      return getNytimesBestSellersLists()
+      return bookData.getNYTBestSellers()
     },
   },
 }

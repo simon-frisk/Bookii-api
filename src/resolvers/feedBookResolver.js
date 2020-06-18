@@ -1,5 +1,5 @@
 const checkAuth = require('../util/checkAuth')
-const { getBookDataFromBookId } = require('../data/bookdata')
+const bookData = require('../data/book/bookData')
 
 module.exports = {
   Mutation: {
@@ -27,7 +27,7 @@ module.exports = {
   },
   FeedBook: {
     async book(feedBook) {
-      return getBookDataFromBookId(feedBook.bookId)
+      return bookData.getByBookId(feedBook.bookId)
     },
     async user(feedBook) {
       return feedBook.parent()

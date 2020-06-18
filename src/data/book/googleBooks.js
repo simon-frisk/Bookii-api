@@ -1,5 +1,5 @@
 const axios = require('axios')
-const { isBookIdTypeISBN, getBookIdValue } = require('../util/bookIdUtil')
+const { isBookIdTypeISBN, getBookIdValue } = require('../../util/bookIdUtil')
 const { ApolloError } = require('apollo-server')
 
 exports.getBookDataFromBookId = async bookId => {
@@ -56,7 +56,7 @@ const extractDataFromVolumeInfo = data => {
   }
 
   return {
-    bookId: bookId,
+    bookId,
     title,
     subTitle,
     description: data.description,
