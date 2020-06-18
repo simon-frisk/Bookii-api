@@ -1,5 +1,5 @@
 const { Schema } = require('mongoose')
-const { isBookId } = require('../book/bookIdUtil')
+const { isBookId } = require('../util/bookIdUtil')
 
 module.exports = new Schema({
   bookId: {
@@ -10,7 +10,7 @@ module.exports = new Schema({
   comment: {
     type: String,
     validate: [
-      (comment) => {
+      comment => {
         if (comment === undefined || comment === null) return false
       },
       'Comment can be empty but not undefined',

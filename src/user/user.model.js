@@ -1,5 +1,5 @@
 const { Schema, model } = require('mongoose')
-const FeedBook = require('../feedbook/feedbook.model')
+const FeedBook = require('../data/feedbook.model')
 const {
   setName,
   validateName,

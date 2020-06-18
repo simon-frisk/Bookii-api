@@ -1,4 +1,4 @@
-const { ApolloServer, ApolloError, UserInputError } = require('apollo-server')
+const { ApolloServer, ApolloError } = require('apollo-server')
 const { GraphQLError } = require('graphql')
 const mongoose = require('mongoose')
 const connectDB = require('./util/db')
@@ -14,12 +14,14 @@ async function main() {
 
   await connectDB()
 
-  const resolvers = {
-    Query: require('./root/query'),
-    Mutation: require('./root/mutation'),
-    FeedBook: require('./feedbook/feedbook.resolver'),
-    User: require('./user/user.resolver'),
-  }
+  const resolvers = [
+    require('./user/user.query'),
+    require('./user/user.mutation'),
+    require('./user/user.resolver'),
+    require('./resolvers/bookResolver'),
+    require('./resolvers/feedBookResolver'),
+    require('./resolvers/feedResolver'),
+  ]
 
   const context = async ({ req }) => {
     try {
@@ -43,6 +45,7 @@ async function main() {
       ) {
         return error
       } else if (error.originalError instanceof mongoose.Error) {
+        //doesnt work. remove mongoose
         if (error.originalError.errors) {
           const errors = []
           for (let e in error.originalError.errors) {

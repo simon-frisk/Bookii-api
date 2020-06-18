@@ -1,21 +1,21 @@
-exports.isBookId = (bookId) => {
+exports.isBookId = bookId => {
   if (!bookId) return false
   if (!(bookId.split(':').length === 2)) return false
   //TODO: add more to check if valid
   return true
 }
 
-exports.getBookIdType = (bookId) => {
+exports.getBookIdType = bookId => {
   if (!this.isBookId(bookId)) return
   return bookId.split(':')[0]
 }
 
-exports.getBookIdValue = (bookId) => {
+exports.getBookIdValue = bookId => {
   if (!this.isBookId(bookId)) return
   return bookId.split(':')[1]
 }
 
-exports.isBookIdTypeISBN = (bookId) => {
+exports.isBookIdTypeISBN = bookId => {
   if (!this.isBookId(bookId)) return false
   return this.getBookIdType(bookId).startsWith('isbn')
 }
@@ -28,10 +28,10 @@ exports.doesISBNBookIdsMatch = (bookId1, bookId2) => {
   if (type1 == type2) return bookId1 == bookId2
 
   const isbn10 = this.getBookIdValue(
-    [bookId1, bookId2].find((bookId) => bookId.startsWith('isbn10'))
+    [bookId1, bookId2].find(bookId => bookId.startsWith('isbn10'))
   )
   const isbn13 = this.getBookIdValue(
-    [bookId1, bookId2].find((bookId) => bookId.startsWith('isbn13'))
+    [bookId1, bookId2].find(bookId => bookId.startsWith('isbn13'))
   )
 
   let isbn10In13 = '978' + isbn10.slice(0, -1)
