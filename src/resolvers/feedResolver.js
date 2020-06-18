@@ -7,8 +7,10 @@ module.exports = {
       checkAuth(user)
       const numToReturn = 9
       await user.populate('following').execPopulate()
-      let feedBooks = user.following.reduce(addUserFeedBooksToArray, [])
-      feedBooks.push(...user.feedBooks)
+      let feedBooks = user.following.reduce(
+        (array, following) => [...array, ...following.feedBooks],
+        []
+      )
       feedBooks.sort(
         (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
       )
@@ -25,8 +27,4 @@ module.exports = {
       return feedBooks
     },
   },
-}
-
-function addUserFeedBooksToArray(array, user) {
-  return [...array, ...user.feedBooks]
 }
