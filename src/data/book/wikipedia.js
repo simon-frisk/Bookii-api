@@ -2,17 +2,7 @@ const axios = require('axios')
 
 module.exports = async (title, author) => {
   try {
-    const searchResult = await axios.get(createSearchUrl(title))
-    const pageids = searchResult.data.query.search.map(res => res.pageid)
-    const dataResult = await Promise.all(
-      pageids.map(pageid => {
-        return axios.get(createDataUrl(pageid))
-      })
-    )
-    let articleDataArray = dataResult.map(
-      (res, index) => res.data.query.pages[pageids[index]].extract
-    )
-
+    const articleDataArray = await getArticleArray(title)
     const articlePoints = articleDataArray.map(article => {
       if (article.includes(title)) {
         if (article.includes(author)) {
@@ -21,7 +11,6 @@ module.exports = async (title, author) => {
       }
       return null
     })
-
     let bestArticleIndex = null
     articlePoints.forEach((point, index) => {
       if (
@@ -30,25 +19,38 @@ module.exports = async (title, author) => {
       )
         bestArticleIndex = index
     })
-
     return articleDataArray[bestArticleIndex]
   } catch (error) {
     return null
   }
 }
 
-const createSearchUrl = title =>
-  `http://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${title}&format=json`
+function createSearchUrl(title) {
+  return `http://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${title}&format=json`
+}
 
-const createDataUrl = pageid =>
-  `http://en.wikipedia.org/w/api.php?action=query&pageids=${pageid}&prop=extracts&explaintext=true&exintro=true&format=json`
+function createDataUrl(pageid) {
+  return `http://en.wikipedia.org/w/api.php?action=query&pageids=${pageid}&prop=extracts&explaintext=true&exintro=true&format=json`
+}
+
+async function getArticleArray(title) {
+  const searchResult = await axios.get(createSearchUrl(title))
+  const articleIds = searchResult.data.query.search.map(res => res.pageid)
+  const dataResult = await Promise.all(
+    articleIds.map(pageid => {
+      return axios.get(createDataUrl(pageid))
+    })
+  )
+  return dataResult.map(
+    (res, index) => res.data.query.pages[articleIds[index]].extract
+  )
+}
 
 function getKeywordPoint(article) {
   const keywords = [
     'book',
     'novel',
     'memoir',
-    'written',
     'published',
     'publisher',
     'author',
