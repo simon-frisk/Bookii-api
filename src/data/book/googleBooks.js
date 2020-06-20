@@ -65,8 +65,9 @@ const extractDataFromVolumeInfo = data => {
     publisher: data.publisher,
     published: data.publishedDate,
     thumbnail:
-      (data.imageLinks && data.imageLinks.extraLarge) ||
-      data.imageLinks.large ||
-      data.imageLinks.thumbnail,
+      data.imageLinks &&
+      (data.imageLinks.extraLarge ||
+        data.imageLinks.large ||
+        data.imageLinks.thumbnail),
   }
 }
