@@ -47,8 +47,5 @@ function hasBookKeywords(article) {
 
 function numberOtherBookKeywords(article) {
   const keywords = ['author', 'published', 'publisher', 'isbn', 'written']
-  const num = keywords.filter(keyword => article.includes(keyword)).length
-
-  console.log(article, num)
-  return num
+  return keywords.filter(keyword => article.includes(keyword)).length
 }

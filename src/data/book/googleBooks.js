@@ -64,6 +64,9 @@ const extractDataFromVolumeInfo = data => {
     pages: data.pageCount,
     publisher: data.publisher,
     published: data.publishedDate,
-    thumbnail: data.imageLinks && data.imageLinks.thumbnail,
+    thumbnail:
+      (data.imageLinks && data.imageLinks.extraLarge) ||
+      data.imageLinks.large ||
+      data.imageLinks.thumbnail,
   }
 }
