@@ -7,7 +7,7 @@ module.exports = async (title, author) => {
     articles = articles
       .filter(article => article.includes(title))
       .filter(article => article.includes(author))
-      .filter(article => hasBookKeywords(article))
+      .filter(article => hasBookKeywordsInFirstSentence(article))
 
     articles.sort(
       (a1, a2) => numberOtherBookKeywords(a2) - numberOtherBookKeywords(a1)
@@ -40,9 +40,11 @@ async function getArticles(title) {
   )
 }
 
-function hasBookKeywords(article) {
+function hasBookKeywordsInFirstSentence(article) {
   const keywords = ['book', 'novel', 'memoir']
-  return keywords.map(keyword => article.includes(keyword)).includes(true)
+  return keywords
+    .map(keyword => article.split('.')[0].includes(keyword))
+    .includes(true)
 }
 
 function numberOtherBookKeywords(article) {
