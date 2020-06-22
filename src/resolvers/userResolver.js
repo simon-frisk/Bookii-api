@@ -1,17 +1,43 @@
-const User = require('../user/user.model')
-const jwt = require('jsonwebtoken-promisified')
-const checkAuth = require('../util/checkAuth')
-const { BlobServiceClient } = require('@azure/storage-blob')
-const mimeTypes = require('mime-types')
 const { UserInputError } = require('apollo-server')
+const mimeTypes = require('mime-types')
+const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken-promisified')
+const { BlobServiceClient } = require('@azure/storage-blob')
+const User = require('../data/user.model')
+const checkAuth = require('../util/checkAuth')
+const { isBookIdTypeISBN, doesISBNBookIdsMatch } = require('../util/bookIdUtil')
+const userData = require('../data/userData')
+const { signJWT } = require('../data/userData')
 
 module.exports = {
-  Mutation: {
-    async signup(_, { user: userData }) {
-      const user = await new User(userData).save()
-      return jwt.signAsync({ _id: user._id }, process.env.JWT_SECRET)
+  Query: {
+    async signin(_, { email, password }) {
+      const user = await User.findOne({ email })
+      if (!user) throw new UserInputError('Email or password not corrent')
+      const correctPassword = await bcrypt.compare(password, user.password)
+      if (!correctPassword)
+        throw new UserInputError('Email or password not corrent')
+      return userData.signJWT(user._id)
     },
-
+    async user(_, { _id: searchedId }, { user }) {
+      checkAuth(user)
+      if (searchedId) return User.findById(searchedId)
+      return user
+    },
+    async users(_, __, { user: me }) {
+      checkAuth(me)
+      const users = await User.find()
+      const usersNotMe = users.filter(
+        user => user._id.toString() !== me._id.toString()
+      )
+      return usersNotMe
+    },
+  },
+  Mutation: {
+    async signup(_, { user: { email, name, password } }) {
+      const { id } = await new User({ email, name, password }).save()
+      return signJWT(id)
+    },
     async updateUser(
       _,
       { user: { email, password, name, profilePicture } },
@@ -72,6 +98,29 @@ module.exports = {
       )
       await followed.save()
       return followed
+    },
+  },
+  User: {
+    async feedBooks(user, { bookId, _id }) {
+      let feedBooks = user.feedBooks
+      if (_id)
+        feedBooks = user.feedBooks.id(_id) ? [user.feedBooks.id(_id)] : []
+      if (isBookIdTypeISBN(bookId))
+        feedBooks = feedBooks.filter(feedBook =>
+          doesISBNBookIdsMatch(feedBook.bookId, bookId)
+        )
+      feedBooks = feedBooks.sort(
+        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+      )
+      return feedBooks
+    },
+    async following(user) {
+      const populated = await user.populate('following').execPopulate()
+      return populated.following
+    },
+    async followers(user) {
+      const populated = await user.populate('followers').execPopulate()
+      return populated.followers
     },
   },
 }

@@ -5,8 +5,7 @@ const connectDB = require('./util/db')
 const dotenv = require('dotenv')
 const jwt = require('jsonwebtoken-promisified')
 const typeDefs = require('./schema')
-const User = require('./user/user.model')
-const wikipedia = require('./data/book/wikipedia')
+const User = require('./data/user.model')
 
 const PORT = process.env.PORT || 4000
 
@@ -16,9 +15,7 @@ async function main() {
   await connectDB()
 
   const resolvers = [
-    require('./user/user.query'),
-    require('./user/user.mutation'),
-    require('./user/user.resolver'),
+    require('./resolvers/userResolver'),
     require('./resolvers/bookResolver'),
     require('./resolvers/feedBookResolver'),
     require('./resolvers/feedResolver'),
