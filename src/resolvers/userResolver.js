@@ -6,8 +6,6 @@ const { BlobServiceClient } = require('@azure/storage-blob')
 const User = require('../data/user.model')
 const checkAuth = require('../util/checkAuth')
 const { isBookIdTypeISBN, doesISBNBookIdsMatch } = require('../util/bookIdUtil')
-const userData = require('../data/userData')
-const { signJWT } = require('../data/userData')
 
 module.exports = {
   Query: {
@@ -17,7 +15,7 @@ module.exports = {
       const correctPassword = await bcrypt.compare(password, user.password)
       if (!correctPassword)
         throw new UserInputError('Email or password not corrent')
-      return userData.signJWT(user._id)
+      return jwt.signAsync({ _id: user._id }, process.env.JWT_SECRET)
     },
     async user(_, { _id: searchedId }, { user }) {
       checkAuth(user)
@@ -35,8 +33,8 @@ module.exports = {
   },
   Mutation: {
     async signup(_, { user: { email, name, password } }) {
-      const { id } = await new User({ email, name, password }).save()
-      return signJWT(id)
+      const { _id } = await new User({ email, name, password }).save()
+      return jwt.signAsync({ _id }, process.env.JWT_SECRET)
     },
     async updateUser(
       _,
