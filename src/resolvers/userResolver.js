@@ -65,6 +65,11 @@ module.exports = {
       await user.save()
       return user
     },
+    async deleteUser(_, { _id }, { user }) {
+      checkAuth(user)
+      await User.findByIdAndDelete(_id)
+      return user
+    },
     async follow(_, { _id }, { user }) {
       checkAuth(user)
       //TODO: validate _id is an objectId (and do this in all other similar places too. Otherwise this will throw an internal server error instead of userinputerror)
