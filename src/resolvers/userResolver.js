@@ -48,9 +48,9 @@ module.exports = {
       if (profilePicture) {
         //TODO: check this code and delete old profilePic
         const file = await profilePicture
-        const fileName = `profilePicture_${user._id}.${mimeTypes.extension(
-          file.mimetype
-        )}`
+        const fileName = `profilePicture_${Date.now()}_${
+          user._id
+        }.${mimeTypes.extension(file.mimetype)}`
         const blobServiceClient = await BlobServiceClient.fromConnectionString(
           process.env.AZURE_STORAGE_CONNECTION_STRING
         )
