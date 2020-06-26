@@ -3,9 +3,11 @@ const bookData = require('../data/book/bookData')
 
 module.exports = {
   Mutation: {
-    async addFeedBook(_, feedBook, { user }) {
+    async addFeedBook(_, { date, comment, bookId }, { user }) {
       checkAuth(user)
-      user.feedBooks.push(feedBook)
+      if (!date) throw new UserInputError('Date required')
+      if (!isBookId(bookId)) throw new UserInputError('BookId not valid')
+      user.feedBooks.push({ date, comment, bookId })
       await user.save()
       return user.feedBooks[user.feedBooks.length - 1]
     },
@@ -13,7 +15,10 @@ module.exports = {
       checkAuth(user)
       const toUpdate = user.feedBooks.id(_id)
       if (comment) toUpdate.comment = comment
-      if (date) toUpdate.date = date
+      if (date) {
+        if (!date) throw new UserInputError('Date required')
+        toUpdate.date = date
+      }
       await user.save()
       return toUpdate
     },

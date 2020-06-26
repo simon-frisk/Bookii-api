@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken-promisified')
 const { BlobServiceClient } = require('@azure/storage-blob')
 const User = require('../data/user.model')
 const checkAuth = require('../util/checkAuth')
+const userService = require('../services/userService')
 
 module.exports = {
   Query: {
@@ -14,7 +15,7 @@ module.exports = {
       const correctPassword = await bcrypt.compare(password, user.password)
       if (!correctPassword)
         throw new UserInputError('Email or password not corrent')
-      return jwt.signAsync({ _id: user._id }, process.env.JWT_SECRET)
+      return userService.signJWT(user._id)
     },
     async user(_, { _id: searchedId }, { user }) {
       checkAuth(user)
@@ -24,16 +25,19 @@ module.exports = {
     async users(_, __, { user: me }) {
       checkAuth(me)
       const users = await User.find()
-      const usersNotMe = users.filter(
+      const usersNotSelf = users.filter(
         user => user._id.toString() !== me._id.toString()
       )
-      return usersNotMe
+      return usersNotSelf
     },
   },
   Mutation: {
     async signup(_, { user: { email, name, password } }) {
+      userService.validateEmail(email)
+      userService.validateName(name)
+      userService.validatePassword(password)
       const { _id } = await new User({ email, name, password }).save()
-      return jwt.signAsync({ _id }, process.env.JWT_SECRET)
+      return userService.signJWT(_id)
     },
     async updateUser(
       _,
@@ -41,9 +45,18 @@ module.exports = {
       { user }
     ) {
       checkAuth(user)
-      if (email) user.email = email
-      if (password) user.password = password
-      if (name) user.name = name
+      if (email) {
+        userService.validateEmail(email)
+        user.email = email
+      }
+      if (password) {
+        userService.validatePassword(password)
+        user.password = password
+      }
+      if (name) {
+        userService.validateName(name)
+        user.name = name
+      }
       if (profilePicture) {
         //TODO: check this code and delete old profilePic
         const file = await profilePicture
@@ -64,9 +77,9 @@ module.exports = {
       await user.save()
       return user
     },
-    async deleteUser(_, { _id }, { user }) {
+    async deleteUser(_, __, { user }) {
       checkAuth(user)
-      await User.findByIdAndDelete(_id)
+      await User.findByIdAndDelete(user._id)
       return user
     },
     async follow(_, { _id }, { user }) {
