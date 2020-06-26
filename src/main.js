@@ -42,15 +42,6 @@ async function main() {
         error.originalError instanceof ApolloError
       ) {
         return error
-      } else if (error.originalError instanceof mongoose.Error) {
-        //doesnt work. remove mongoose
-        if (error.originalError.errors) {
-          const errors = []
-          for (let e in error.originalError.errors) {
-            errors.push(error.originalError.errors[e].message)
-          }
-          return new ApolloError(errors.join(', '))
-        }
       } else return new GraphQLError('Unknown error occured')
     },
   })
