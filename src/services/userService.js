@@ -11,21 +11,24 @@ module.exports = {
       throw new UserInputError('Email already taken')
     if (!emailRegex.test(email)) throw new UserInputError('Email invalid')
   },
-  validateName(name) {
-    if (!nameRegex.test(name)) throw new UserInputError('Name invalid')
+  validateAndFixName(name) {
+    const names = name.split(' ')
+    if (!names.length === 2)
+      throw new UserInputError('Name has to consist of first- and lastname')
+    const firstNameLetters = names[0].toLowerCase().split('')
+    firstNameLetters[0] = firstNameLetters[0].toUpperCase()
+    const lastNameLetters = names[1].toLowerCase().split('')
+    lastNameLetters[0] = lastNameLetters[0].toUpperCase()
+    const fixedName = firstNameLetters
+      .join('')
+      .concat(' ', lastNameLetters.join(''))
+    if (!nameRegex.test(fixedName))
+      throw new UserInputError('Name has to consist of first- and lastname')
+    return fixedName
   },
-  validatePassword(password) {
+  validatePasswordAndCreateHash(password) {
     if (password.length < 6)
       throw new UserInputError('Password has to be at least 6 characters')
-  },
-  fixName(name) {
-    const firstNameLetters = name.split(' ')[0].toLowerCase().split('')
-    firstNameLetters[0] = firstNameLetters[0].toUpperCase()
-    const lastNameLetters = name.split(' ')[1].toLowerCase().split('')
-    lastNameLetters[0] = lastNameLetters[0].toUpperCase()
-    return firstNameLetters.join('').concat(' ', lastNameLetters.join(''))
-  },
-  createPasswordHash(password) {
     return bcrypt.hash(password, 10)
   },
   signJWT(_id) {

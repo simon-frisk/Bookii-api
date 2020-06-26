@@ -34,9 +34,13 @@ module.exports = {
   Mutation: {
     async signup(_, { user: { email, name, password } }) {
       userService.validateEmail(email)
-      userService.validateName(name)
-      userService.validatePassword(password)
-      const { _id } = await new User({ email, name, password }).save()
+      fixedName = userService.validateAndFixName(name)
+      const hash = await userService.validatePasswordAndCreateHash(password)
+      const { _id } = await new User({
+        email,
+        name: fixedName,
+        password: hash,
+      }).save()
       return userService.signJWT(_id)
     },
     async updateUser(
