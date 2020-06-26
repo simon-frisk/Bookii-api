@@ -129,6 +129,11 @@ module.exports = {
       )
       return feedBooks
     },
+    async favoriteBooks(user) {
+      return user.favoriteBooks.map(feedBook => {
+        return user.feedBooks.id(feedBook)
+      })
+    },
     async following(user) {
       const populated = await user.populate('following').execPopulate()
       return populated.following
