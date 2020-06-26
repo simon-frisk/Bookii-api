@@ -1,5 +1,7 @@
 const checkAuth = require('../util/checkAuth')
 const bookData = require('../data/book/bookData')
+const { isBookId } = require('../util/bookIdUtil')
+const { UserInputError } = require('apollo-server')
 
 module.exports = {
   Mutation: {
@@ -26,7 +28,8 @@ module.exports = {
       checkAuth(user)
       const toRemove = user.feedBooks.id(_id)
       toRemove.remove()
-      user.save()
+      user.favoriteBooks.remove(_id)
+      await user.save()
       return toRemove
     },
   },
