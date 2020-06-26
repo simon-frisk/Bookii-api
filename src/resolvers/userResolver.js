@@ -5,7 +5,6 @@ const jwt = require('jsonwebtoken-promisified')
 const { BlobServiceClient } = require('@azure/storage-blob')
 const User = require('../data/user.model')
 const checkAuth = require('../util/checkAuth')
-const { isBookIdTypeISBN, doesISBNBookIdsMatch } = require('../util/bookIdUtil')
 
 module.exports = {
   Query: {
@@ -104,14 +103,10 @@ module.exports = {
     },
   },
   User: {
-    async feedBooks(user, { bookId, _id }) {
+    async feedBooks(user, { _id }) {
       let feedBooks = user.feedBooks
       if (_id)
         feedBooks = user.feedBooks.id(_id) ? [user.feedBooks.id(_id)] : []
-      if (isBookIdTypeISBN(bookId))
-        feedBooks = feedBooks.filter(feedBook =>
-          doesISBNBookIdsMatch(feedBook.bookId, bookId)
-        )
       feedBooks = feedBooks.sort(
         (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
       )

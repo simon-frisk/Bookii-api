@@ -28,7 +28,7 @@ module.exports = gql`
     _id: ID!
     email: String!
     name: String!
-    feedBooks(bookId: String, _id: ID): [FeedBook!]!
+    feedBooks(_id: ID): [FeedBook!]!
     profilePicturePath: String
     following: [User!]!
     followers: [User!]!
@@ -54,6 +54,8 @@ module.exports = gql`
     published: String
     thumbnail: String
     wikipediadescription: String
+    onselffeed: [FeedBook!]!
+    onfollowingfeed: [FeedBook!]!
   }
 
   type BookList {
