@@ -19,6 +19,7 @@ async function main() {
     require('./resolvers/bookResolver'),
     require('./resolvers/feedBookResolver'),
     require('./resolvers/feedResolver'),
+    require('./resolvers/wishBookResolver'),
   ]
 
   const context = async ({ req }) => {

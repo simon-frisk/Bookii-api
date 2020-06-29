@@ -43,5 +43,9 @@ module.exports = {
           return new Date(b.date).getTime() - new Date(a.date).getTime()
         })
     },
+    async isWished(book, _, { user }) {
+      if (user.wishBooks.includes(book.bookId)) return true
+      return false
+    },
   },
 }

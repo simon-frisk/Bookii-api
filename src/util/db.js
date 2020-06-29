@@ -7,7 +7,7 @@ module.exports = async () => {
       useUnifiedTopology: true,
     })
     .then(
-      () => console.log('Connected to database'),
+      () => console.log('Connected to atlas'),
       err => console.error(err)
     )
 }

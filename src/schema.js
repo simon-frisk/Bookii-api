@@ -30,6 +30,9 @@ module.exports = gql`
       favorite: Boolean
     ): FeedBook!
 
+    addWishBook(bookId: String!): String
+    removeWishBook(bookId: String!): String
+
     follow(_id: ID!): User!
     unfollow(_id: ID!): User!
   }
@@ -39,6 +42,7 @@ module.exports = gql`
     email: String!
     name: String!
     feedBooks(_id: ID): [FeedBook!]!
+    wishBooks: [Book]!
     profilePicturePath: String
     following: [User!]!
     followers: [User!]!
@@ -67,6 +71,7 @@ module.exports = gql`
     wikipediadescription: String
     onselffeed: [FeedBook!]!
     onfollowingfeed: [FeedBook!]!
+    isWished: Boolean!
   }
 
   type BookList {

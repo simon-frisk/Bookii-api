@@ -1,11 +1,11 @@
 const { UserInputError } = require('apollo-server')
 const mimeTypes = require('mime-types')
 const bcrypt = require('bcrypt')
-const jwt = require('jsonwebtoken-promisified')
 const { BlobServiceClient } = require('@azure/storage-blob')
 const User = require('../data/user.model')
 const checkAuth = require('../util/checkAuth')
 const userService = require('../services/userService')
+const bookData = require('../data/book/bookData')
 
 module.exports = {
   Query: {
@@ -123,6 +123,13 @@ module.exports = {
         (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
       )
       return feedBooks
+    },
+    async wishBooks(user) {
+      return Promise.all(
+        user.wishBooks.map(async id => {
+          return bookData.getByBookId(id)
+        })
+      )
     },
     async following(user) {
       const populated = await user.populate('following').execPopulate()
