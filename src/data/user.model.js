@@ -18,12 +18,6 @@ const User = new Schema({
     },
   ],
   feedBooks: [FeedBook],
-  favoriteBooks: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: 'FeedBook',
-    },
-  ],
   profilePicturePath: String,
 })
 
