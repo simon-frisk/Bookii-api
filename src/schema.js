@@ -16,12 +16,19 @@ module.exports = gql`
     updateUser(user: UserUpdateInput!): User!
     deleteUser: User!
 
-    addFeedBook(bookId: String!, comment: String!, date: String!): FeedBook!
+    addFeedBook(
+      bookId: String!
+      comment: String!
+      date: String!
+      favorite: Boolean!
+    ): FeedBook!
     removeFeedBook(_id: ID!): FeedBook!
-    updateFeedBook(_id: ID!, comment: String, date: String): FeedBook!
-
-    addFavoriteBook(_id: ID!): FeedBook!
-    removeFavoriteBook(_id: ID!): FeedBook!
+    updateFeedBook(
+      _id: ID!
+      comment: String
+      date: String
+      favorite: Boolean
+    ): FeedBook!
 
     follow(_id: ID!): User!
     unfollow(_id: ID!): User!
@@ -31,8 +38,7 @@ module.exports = gql`
     _id: ID!
     email: String!
     name: String!
-    feedBooks(_id: ID): [FeedBook!]!
-    favoriteBooks: [FeedBook!]!
+    feedBooks(_id: ID, favorite: Boolean): [FeedBook!]!
     profilePicturePath: String
     following: [User!]!
     followers: [User!]!
@@ -43,6 +49,7 @@ module.exports = gql`
     bookId: String!
     comment: String!
     date: String!
+    favorite: Boolean!
     book: Book
     user: User
   }

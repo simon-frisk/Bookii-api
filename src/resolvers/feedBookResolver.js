@@ -5,18 +5,20 @@ const { UserInputError } = require('apollo-server')
 
 module.exports = {
   Mutation: {
-    async addFeedBook(_, { date, comment, bookId }, { user }) {
+    async addFeedBook(_, { date, comment, bookId, favorite }, { user }) {
       checkAuth(user)
       if (!date) throw new UserInputError('Date required')
       if (!isBookId(bookId)) throw new UserInputError('BookId not valid')
-      user.feedBooks.push({ date, comment, bookId })
+      user.feedBooks.push({ date, comment, bookId, favorite })
       await user.save()
       return user.feedBooks[user.feedBooks.length - 1]
     },
-    async updateFeedBook(_, { _id, comment, date }, { user }) {
+    async updateFeedBook(_, { _id, comment, date, favorite }, { user }) {
       checkAuth(user)
       const toUpdate = user.feedBooks.id(_id)
+      //TODO: if not toUpdate
       if (comment) toUpdate.comment = comment
+      if (favorite) toUpdate.favorite = favorite
       if (date) {
         if (!date) throw new UserInputError('Date required')
         toUpdate.date = date
@@ -28,7 +30,6 @@ module.exports = {
       checkAuth(user)
       const toRemove = user.feedBooks.id(_id)
       toRemove.remove()
-      user.favoriteBooks.remove(_id)
       await user.save()
       return toRemove
     },

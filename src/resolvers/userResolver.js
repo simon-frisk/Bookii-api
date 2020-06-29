@@ -120,19 +120,16 @@ module.exports = {
     },
   },
   User: {
-    async feedBooks(user, { _id }) {
+    async feedBooks(user, { _id, favorite }) {
       let feedBooks = user.feedBooks
       if (_id)
         feedBooks = user.feedBooks.id(_id) ? [user.feedBooks.id(_id)] : []
+      if (favorite)
+        feedBooks = user.feedBooks.filter(feedBook => feedBook.favorite)
       feedBooks = feedBooks.sort(
         (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
       )
       return feedBooks
-    },
-    async favoriteBooks(user) {
-      return user.favoriteBooks.map(feedBook => {
-        return user.feedBooks.id(feedBook)
-      })
     },
     async following(user) {
       const populated = await user.populate('following').execPopulate()
