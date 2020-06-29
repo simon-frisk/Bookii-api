@@ -49,7 +49,7 @@ module.exports = {
       { user }
     ) {
       checkAuth(user)
-      if (email) user.email = userService.validateEmail(email)
+      if (email) user.email = await userService.validateEmail(email, user._id)
       if (name) user.name = userService.validateAndFixName(name)
       if (password)
         user.password = await userService.validatePasswordAndCreateHash(
