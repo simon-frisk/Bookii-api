@@ -10,6 +10,7 @@ module.exports = {
     if (user && user._id.toString() !== _id.toString())
       throw new UserInputError('Email already taken')
     if (!emailRegex.test(email)) throw new UserInputError('Email invalid')
+    return email
   },
   validateAndFixName(name) {
     const names = name.split(' ')

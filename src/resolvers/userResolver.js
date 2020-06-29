@@ -49,18 +49,13 @@ module.exports = {
       { user }
     ) {
       checkAuth(user)
-      if (email) {
-        userService.validateEmail(email)
-        user.email = email
-      }
-      if (password) {
-        userService.validatePassword(password)
-        user.password = password
-      }
-      if (name) {
-        userService.validateName(name)
-        user.name = name
-      }
+      if (email) user.email = userService.validateEmail(email)
+      if (name) user.name = userService.validateAndFixName(name)
+      if (password)
+        user.password = await userService.validatePasswordAndCreateHash(
+          password
+        )
+
       if (profilePicture) {
         //TODO: check this code and delete old profilePic
         const file = await profilePicture
