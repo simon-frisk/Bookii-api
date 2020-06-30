@@ -117,6 +117,8 @@ module.exports = {
       checkAuth(self)
       const user = await User.findById(_id)
       if (!user) throw new UserInputError('User does not exist')
+      if (user._id.toString() === self._id.toString())
+        throw new UserInputError("You can't flag yourself")
       if (user.inappropriateFlags.includes(self._id)) {
         const index = user.inappropriateFlags.indexOf(self._id)
         user.inappropriateFlags.splice(index, 1)
