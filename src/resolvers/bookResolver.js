@@ -12,7 +12,7 @@ module.exports = {
       checkAuth(user)
       return bookData.getByQuery(query)
     },
-    async nytimesBestSellers(_, __, { user }) {
+    async bookLists(_, __, { user }) {
       checkAuth(user)
       return bookData.getNYTBestSellers()
     },
