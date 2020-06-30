@@ -35,6 +35,7 @@ module.exports = gql`
 
     follow(_id: ID!): User!
     unfollow(_id: ID!): User!
+    toggleinappropriateflagged(_id: ID!): Boolean!
   }
 
   type User {
@@ -46,6 +47,7 @@ module.exports = gql`
     profilePicturePath: String
     following: [User!]!
     followers: [User!]!
+    isinappropriateflagged: Boolean!
   }
 
   type FeedBook {

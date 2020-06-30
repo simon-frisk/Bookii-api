@@ -113,6 +113,21 @@ module.exports = {
       await followed.save()
       return followed
     },
+    async toggleinappropriateflagged(_, { _id }, { user: self }) {
+      checkAuth(self)
+      const user = await User.findById(_id)
+      if (!user) throw new UserInputError('User does not exist')
+      if (user.inappropriateFlags.includes(self._id)) {
+        const index = user.inappropriateFlags.indexOf(self._id)
+        user.inappropriateFlags.splice(index, 1)
+        await user.save()
+        return false
+      } else {
+        user.inappropriateFlags.push(self._id)
+        await user.save()
+        return true
+      }
+    },
   },
   User: {
     async feedBooks(user, { _id }) {
@@ -138,6 +153,10 @@ module.exports = {
     async followers(user) {
       const populated = await user.populate('followers').execPopulate()
       return populated.followers
+    },
+    async isinappropriateflagged(user, _, { user: self }) {
+      if (user.inappropriateFlags.includes(self._id)) return true
+      return false
     },
   },
 }

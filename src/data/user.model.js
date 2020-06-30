@@ -20,6 +20,12 @@ const User = new Schema({
   feedBooks: [FeedBook],
   wishBooks: [String],
   profilePicturePath: String,
+  inappropriateFlags: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+    },
+  ],
 })
 
 module.exports = model('User', User)
