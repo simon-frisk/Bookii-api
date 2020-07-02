@@ -4,17 +4,19 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken-promisified')
 
 module.exports = {
-  async validateEmail(email, _id) {
+  async validateAndFixEmail(email, _id) {
     if (!email) throw new UserInputError('Email required')
-    const user = await User.findOne({ email })
-    if (user && user._id.toString() !== _id.toString())
+    const fixedEmail = email.trim()
+    const user = await User.findOne({ email: fixedEmail })
+    if (user && (!_id || user._id.toString() !== _id.toString()))
       throw new UserInputError('Email already taken')
-    if (!emailRegex.test(email)) throw new UserInputError('Email invalid')
-    return email
+    if (!emailRegex.test(fixedEmail)) throw new UserInputError('Email invalid')
+    return fixedEmail
   },
   validateAndFixName(name) {
+    name = name.trim()
     const names = name.split(' ')
-    if (!names.length === 2)
+    if (!(names.length === 2))
       throw new UserInputError('Name has to consist of first- and lastname')
     const firstNameLetters = names[0].toLowerCase().split('')
     firstNameLetters[0] = firstNameLetters[0].toUpperCase()
@@ -27,12 +29,12 @@ module.exports = {
       throw new UserInputError('Name has to consist of first- and lastname')
     return fixedName
   },
-  validatePasswordAndCreateHash(password) {
+  async validatePasswordAndCreateHash(password) {
     if (password.length < 6)
       throw new UserInputError('Password has to be at least 6 characters')
     return bcrypt.hash(password, 10)
   },
-  signJWT(_id) {
+  async signJWT(_id) {
     return jwt.signAsync({ _id }, process.env.JWT_SECRET)
   },
 }

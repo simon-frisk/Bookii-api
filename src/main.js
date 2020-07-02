@@ -5,7 +5,6 @@ const connectDB = require('./util/db')
 const dotenv = require('dotenv')
 const jwt = require('jsonwebtoken-promisified')
 const typeDefs = require('./schema')
-const User = require('./data/user.model')
 
 const PORT = process.env.PORT || 4000
 
@@ -25,10 +24,13 @@ async function main() {
   const context = async ({ req }) => {
     try {
       const token = req.headers.authorization.split(' ')[1]
-      const { _id } = await jwt.verifyAsync(token, process.env.JWT_SECRET)
-      const user = await User.findById(_id)
-      return { user }
-    } catch (error) {}
+      const decodedToken = await jwt.verifyAsync(token, process.env.JWT_SECRET)
+      return { decodedToken }
+    } catch (error) {
+      return {
+        decodedToken: {},
+      }
+    }
   }
 
   const server = new ApolloServer({

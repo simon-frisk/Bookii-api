@@ -20,6 +20,7 @@ const User = new Schema({
   feedBooks: [FeedBook],
   wishBooks: [String],
   profilePicturePath: String,
+  latestConsent: Boolean,
   inappropriateFlags: [
     {
       type: Schema.Types.ObjectId,

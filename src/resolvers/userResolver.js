@@ -3,9 +3,9 @@ const mimeTypes = require('mime-types')
 const bcrypt = require('bcrypt')
 const { BlobServiceClient } = require('@azure/storage-blob')
 const User = require('../data/user.model')
-const checkAuth = require('../util/checkAuth')
 const userService = require('../services/userService')
 const bookData = require('../data/book/bookData')
+const Auth = require('../util/Auth')
 
 module.exports = {
   Query: {
@@ -17,39 +17,47 @@ module.exports = {
         throw new UserInputError('Email or password not corrent')
       return userService.signJWT(user._id)
     },
-    async user(_, { _id: searchedId }, { user }) {
-      checkAuth(user)
+    async user(_, { _id: searchedId }, ctx) {
+      const user = await Auth.checkSignInAndConsentAndReturn(
+        ctx.decodedToken._id
+      )
       if (searchedId) return User.findById(searchedId)
       return user
     },
-    async users(_, __, { user: me }) {
-      checkAuth(me)
+    async users(_, __, ctx) {
+      const self = await Auth.checkSignInAndConsentAndReturn(
+        ctx.decodedToken._id
+      )
       const users = await User.find()
       const usersNotSelf = users.filter(
-        user => user._id.toString() !== me._id.toString()
+        user => user._id.toString() !== self._id.toString()
       )
       return usersNotSelf
     },
   },
   Mutation: {
     async signup(_, { user: { email, name, password } }) {
-      userService.validateEmail(email)
-      fixedName = userService.validateAndFixName(name)
+      const fixedEmail = await userService.validateAndFixEmail(email)
+      const fixedName = userService.validateAndFixName(name)
       const hash = await userService.validatePasswordAndCreateHash(password)
-      const { _id } = await new User({
-        email,
+      const user = await new User({
+        email: fixedEmail,
         name: fixedName,
         password: hash,
-      }).save()
-      return userService.signJWT(_id)
+      })
+      await user.save()
+      return userService.signJWT(user._id)
     },
     async updateUser(
       _,
       { user: { email, password, name, profilePicture } },
-      { user }
+      ctx
     ) {
-      checkAuth(user)
-      if (email) user.email = await userService.validateEmail(email, user._id)
+      const user = await Auth.checkSignInAndConsentAndReturn(
+        ctx.decodedToken._id
+      )
+      if (email)
+        user.email = await userService.validateAndFixEmail(email, user._id)
       if (name) user.name = userService.validateAndFixName(name)
       if (password)
         user.password = await userService.validatePasswordAndCreateHash(
@@ -76,13 +84,17 @@ module.exports = {
       await user.save()
       return user
     },
-    async deleteUser(_, __, { user }) {
-      checkAuth(user)
+    async deleteUser(_, __, ctx) {
+      const user = await Auth.checkSignInAndConsentAndReturn(
+        ctx.decodedToken._id
+      )
       await User.findByIdAndDelete(user._id)
       return user
     },
-    async follow(_, { _id }, { user }) {
-      checkAuth(user)
+    async follow(_, { _id }, ctx) {
+      const user = await Auth.checkSignInAndConsentAndReturn(
+        ctx.decodedToken._id
+      )
       //TODO: validate _id is an objectId (and do this in all other similar places too. Otherwise this will throw an internal server error instead of userinputerror)
       const followed = await User.findById(_id)
       if (!followed)
@@ -95,8 +107,10 @@ module.exports = {
       await followed.save()
       return followed
     },
-    async unfollow(_, { _id }, { user }) {
-      checkAuth(user)
+    async unfollow(_, { _id }, ctx) {
+      const user = await Auth.checkSignInAndConsentAndReturn(
+        ctx.decodedToken._id
+      )
       const followed = await User.findById(_id)
       if (!followed)
         throw new UserInputError('The user to unfollow does not exist')
@@ -113,8 +127,10 @@ module.exports = {
       await followed.save()
       return followed
     },
-    async toggleinappropriateflagged(_, { _id }, { user: self }) {
-      checkAuth(self)
+    async toggleinappropriateflagged(_, { _id }, ctx) {
+      const self = await Auth.checkSignInAndConsentAndReturn(
+        ctx.decodedToken._id
+      )
       const user = await User.findById(_id)
       if (!user) throw new UserInputError('User does not exist')
       if (user._id.toString() === self._id.toString())
@@ -129,6 +145,12 @@ module.exports = {
         await user.save()
         return true
       }
+    },
+    async acceptLatestPolicies(_, __, ctx) {
+      const user = await Auth.checkSignInAndReturn(ctx.decodedToken._id)
+      user.latestConsent = true
+      await user.save()
+      return true
     },
   },
   User: {
@@ -156,8 +178,8 @@ module.exports = {
       const populated = await user.populate('followers').execPopulate()
       return populated.followers
     },
-    async isinappropriateflagged(user, _, { user: self }) {
-      if (user.inappropriateFlags.includes(self._id)) return true
+    async isinappropriateflagged(user, _, ctx) {
+      if (user.inappropriateFlags.includes(ctx.decodedToken._id)) return true
       return false
     },
   },

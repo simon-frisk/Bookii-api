@@ -1,20 +1,24 @@
-const checkAuth = require('../util/checkAuth')
+const Auth = require('../util/Auth')
 const bookData = require('../data/book/bookData')
 const { isBookId } = require('../util/bookIdUtil')
 const { UserInputError } = require('apollo-server')
 
 module.exports = {
   Mutation: {
-    async addFeedBook(_, { date, comment, bookId, favorite }, { user }) {
-      checkAuth(user)
+    async addFeedBook(_, { date, comment, bookId, favorite }, ctx) {
+      const user = await Auth.checkSignInAndConsentAndReturn(
+        ctx.decodedToken._id
+      )
       if (!date) throw new UserInputError('Date required')
       if (!isBookId(bookId)) throw new UserInputError('BookId not valid')
       user.feedBooks.push({ date, comment, bookId, favorite })
       await user.save()
       return user.feedBooks[user.feedBooks.length - 1]
     },
-    async updateFeedBook(_, { _id, comment, date, favorite }, { user }) {
-      checkAuth(user)
+    async updateFeedBook(_, { _id, comment, date, favorite }, ctx) {
+      const user = await Auth.checkSignInAndConsentAndReturn(
+        ctx.decodedToken._id
+      )
       const toUpdate = user.feedBooks.id(_id)
       //TODO: if not toUpdate
       if (comment) toUpdate.comment = comment
@@ -26,8 +30,10 @@ module.exports = {
       await user.save()
       return toUpdate
     },
-    async removeFeedBook(_, { _id }, { user }) {
-      checkAuth(user)
+    async removeFeedBook(_, { _id }, ctx) {
+      const user = await Auth.checkSignInAndConsentAndReturn(
+        ctx.decodedToken._id
+      )
       const toRemove = user.feedBooks.id(_id)
       toRemove.remove()
       await user.save()

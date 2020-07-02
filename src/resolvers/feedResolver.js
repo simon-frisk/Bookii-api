@@ -1,10 +1,12 @@
 const { UserInputError } = require('apollo-server')
-const checkAuth = require('../util/checkAuth')
+const Auth = require('../util/Auth')
 
 module.exports = {
   Query: {
-    async feed(_, { after }, { user }) {
-      checkAuth(user)
+    async feed(_, { after }, ctx) {
+      const user = await Auth.checkSignInAndConsentAndReturn(
+        ctx.decodedToken._id
+      )
       const numToReturn = 9
       await user.populate('following').execPopulate()
       let feedBooks = user.following.reduce(

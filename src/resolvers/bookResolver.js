@@ -1,19 +1,20 @@
 const bookData = require('../data/book/bookData')
-const checkAuth = require('../util/checkAuth')
 const { doesISBNBookIdsMatch } = require('../util/bookIdUtil')
+const Auth = require('../util/Auth')
+const User = require('../data/user.model')
 
 module.exports = {
   Query: {
-    async book(_, { bookId }, { user }) {
-      checkAuth(user)
+    async book(_, { bookId }, ctx) {
+      await Auth.checkSignInAndConsentAndReturn(ctx.decodedToken._id)
       return bookData.getByBookId(bookId)
     },
-    async bookSearch(_, { query }, { user }) {
-      checkAuth(user)
+    async bookSearch(_, { query }, ctx) {
+      await Auth.checkSignInAndConsentAndReturn(ctx.decodedToken._id)
       return bookData.getByQuery(query)
     },
-    async bookLists(_, __, { user }) {
-      checkAuth(user)
+    async bookLists(_, __, ctx) {
+      await Auth.checkSignInAndConsentAndReturn(ctx.decodedToken._id)
       return bookData.getNYTBestSellers()
     },
   },
@@ -22,14 +23,20 @@ module.exports = {
       const author = book.authors ? book.authors[0] : null
       return bookData.getWikipediaDescription(book.title, author)
     },
-    onselffeed(book, _, { user }) {
+    async onselffeed(book, _, ctx) {
+      const user = await Auth.checkSignInAndConsentAndReturn(
+        ctx.decodedToken._id
+      )
       return user.feedBooks
         .filter(feedBook => doesISBNBookIdsMatch(feedBook.bookId, book.bookId))
         .sort((a, b) => {
           return new Date(b.date).getTime() - new Date(a.date).getTime()
         })
     },
-    async onfollowingfeed(book, _, { user }) {
+    async onfollowingfeed(book, _, ctx) {
+      const user = await Auth.checkSignInAndConsentAndReturn(
+        ctx.decodedToken._id
+      )
       await user.populate('following').execPopulate()
       return user.following
         .reduce((feedBooks, following) => {
@@ -43,7 +50,8 @@ module.exports = {
           return new Date(b.date).getTime() - new Date(a.date).getTime()
         })
     },
-    async isWished(book, _, { user }) {
+    async isWished(book, _, ctx) {
+      const user = await User.findById(ctx.decodedToken._id)
       if (user.wishBooks.includes(book.bookId)) return true
       return false
     },

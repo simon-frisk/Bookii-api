@@ -36,6 +36,8 @@ module.exports = gql`
     follow(_id: ID!): User!
     unfollow(_id: ID!): User!
     toggleinappropriateflagged(_id: ID!): Boolean!
+
+    acceptLatestPolicies: Boolean!
   }
 
   type User {
