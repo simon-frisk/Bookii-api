@@ -1,3 +1,4 @@
+const _ = require('lodash')
 const Auth = require('../util/Auth')
 const bookData = require('../data/book/bookData')
 const { isBookId } = require('../util/bookIdUtil')
@@ -15,18 +16,15 @@ module.exports = {
       await user.save()
       return user.feedBooks[user.feedBooks.length - 1]
     },
-    async updateFeedBook(_, { _id, comment, date, favorite }, ctx) {
+    async updateFeedBook(__, { _id, comment, date, favorite }, ctx) {
       const user = await Auth.checkSignInAndConsentAndReturn(
         ctx.decodedToken._id
       )
       const toUpdate = user.feedBooks.id(_id)
-      //TODO: if not toUpdate
-      if (comment) toUpdate.comment = comment
-      if (favorite) toUpdate.favorite = favorite
-      if (date) {
-        if (!date) throw new UserInputError('Date required')
-        toUpdate.date = date
-      }
+      if (!toUpdate) throw new UserInputError('Feedbook to update not found')
+      if (_.isString(toUpdate.comment)) toUpdate.comment = comment
+      if (_.isBoolean(toUpdate.favorite)) toUpdate.favorite = favorite
+      if (Date.parse(date)) toUpdate.date = date
       await user.save()
       return toUpdate
     },

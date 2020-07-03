@@ -89,6 +89,7 @@ module.exports = {
         ctx.decodedToken._id
       )
       await User.findByIdAndDelete(user._id)
+      //TODO: delete from following, followers, flags etc.
       return user
     },
     async follow(_, { _id }, ctx) {
