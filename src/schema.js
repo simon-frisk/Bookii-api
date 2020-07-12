@@ -87,6 +87,7 @@ module.exports = gql`
     email: String!
     name: String!
     password: String!
+    latestConsent: Boolean!
   }
 
   input UserUpdateInput {

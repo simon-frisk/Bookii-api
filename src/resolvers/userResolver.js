@@ -40,7 +40,9 @@ module.exports = {
     },
   },
   Mutation: {
-    async signup(_, { user: { email, name, password } }) {
+    async signup(_, { user: { email, name, password, latestConsent } }) {
+      if (latestConsent !== true)
+        throw new UserInputError('You have to agree to policies to sign up')
       const fixedEmail = await userService.validateAndFixEmail(email)
       const fixedName = userService.validateAndFixName(name)
       const hash = await userService.validatePasswordAndCreateHash(password)
@@ -48,6 +50,7 @@ module.exports = {
         email: fixedEmail,
         name: fixedName,
         password: hash,
+        latestConsent,
       })
       await user.save()
       return userService.signJWT(user._id)
