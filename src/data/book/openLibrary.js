@@ -26,7 +26,7 @@ function extractData(data, bookId) {
     title,
     subTitle,
     pages: data.number_of_pages,
-    thumbnail: data.cover && data.cover.medium,
+    thumbnail: data.cover && data.cover.large,
     authors: data.authors && data.authors.map(author => author.name),
     published: data.publish_date,
     publisher: data.publishers && data.publishers[0].name,
