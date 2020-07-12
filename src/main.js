@@ -38,7 +38,8 @@ async function main() {
     context,
     tracing: true,
     formatError: error => {
-      console.log(error)
+      console.log('Return error: ', error.message)
+
       if (
         error instanceof ApolloError ||
         error.originalError instanceof ApolloError
