@@ -1,5 +1,6 @@
 const axios = require('axios')
 const { isBookIdTypeISBN, getBookIdValue } = require('../../util/bookIdUtil')
+const bookService = require('../../services/bookService')
 
 exports.getBookDataFromBookId = async bookId => {
   if (isBookIdTypeISBN(bookId)) {
@@ -43,15 +44,10 @@ const extractDataFromVolumeInfo = data => {
 
   if (!data.title) return
 
-  let title, subTitle
-  if (data.title.includes(':') && !data.subtitle) {
-    const index = data.title.indexOf(':')
-    title = data.title.slice(0, index).trim()
-    subTitle = data.title.slice(index + 1).trim()
-  } else {
-    title = data.title
-    subTitle = data.subtitle
-  }
+  const { title, subTitle } = bookService.extractSubtitleAndMainTitleFromTitles(
+    data.title,
+    data.subTitle
+  )
 
   return {
     bookId,
