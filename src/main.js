@@ -1,9 +1,8 @@
 const { ApolloServer, ApolloError } = require('apollo-server')
 const { GraphQLError } = require('graphql')
-const mongoose = require('mongoose')
-const connectDB = require('./util/db')
 const dotenv = require('dotenv')
 const jwt = require('jsonwebtoken-promisified')
+const connectDB = require('./util/db')
 const typeDefs = require('./schema')
 
 const PORT = process.env.PORT || 4000

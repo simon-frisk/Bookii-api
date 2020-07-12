@@ -1,11 +1,15 @@
 const { UserInputError } = require('apollo-server')
 const mimeTypes = require('mime-types')
 const bcrypt = require('bcrypt')
-const { BlobServiceClient } = require('@azure/storage-blob')
+const { Storage } = require('@google-cloud/storage')
 const User = require('../data/user.model')
 const userService = require('../services/userService')
 const bookData = require('../data/book/bookData')
 const Auth = require('../util/Auth')
+const _ = require('lodash')
+const url = require('url')
+
+const storage = new Storage()
 
 module.exports = {
   Query: {
@@ -49,7 +53,7 @@ module.exports = {
       return userService.signJWT(user._id)
     },
     async updateUser(
-      _,
+      __,
       { user: { email, password, name, profilePicture } },
       ctx
     ) {
@@ -63,23 +67,37 @@ module.exports = {
         user.password = await userService.validatePasswordAndCreateHash(
           password
         )
-
       if (profilePicture) {
-        //TODO: check this code and delete old profilePic
         const file = await profilePicture
-        const fileName = `profilePicture_${Date.now()}_${
+        const bucket = storage.bucket('bookapp-282214.appspot.com')
+
+        if (user.profilePicturePath) {
+          try {
+            const array = user.profilePicturePath.split('/')
+            const prevFileName = array.slice(array.length - 2).join('/')
+            await bucket.file(prevFileName).delete()
+          } catch (e) {}
+        }
+
+        const fileName = `profile_pictures/profilePicture_${Date.now()}_${
           user._id
         }.${mimeTypes.extension(file.mimetype)}`
-        const blobServiceClient = await BlobServiceClient.fromConnectionString(
-          process.env.AZURE_STORAGE_CONNECTION_STRING
-        )
-        const containerClient = await blobServiceClient.getContainerClient(
-          'profilepictures'
-        )
-        const blockBlobClient = containerClient.getBlockBlobClient(fileName)
-        await blockBlobClient.uploadStream(file.createReadStream())
-        const url = `https://bookistorage.blob.core.windows.net/profilepictures/${fileName}`
-        user.profilePicturePath = url
+
+        await new Promise(resolve => {
+          file
+            .createReadStream()
+            .pipe(
+              bucket.file(fileName).createWriteStream({
+                resumable: false,
+                gzip: true,
+              })
+            )
+            .on('finish', resolve)
+        })
+
+        user.profilePicturePath =
+          'https://storage.googleapis.com/bookapp-282214.appspot.com/' +
+          fileName
       }
       await user.save()
       return user
