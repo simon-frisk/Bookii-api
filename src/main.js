@@ -38,14 +38,15 @@ async function main() {
     context,
     tracing: true,
     formatError: error => {
-      console.log('Return error: ', error.message)
-
       if (
         error instanceof ApolloError ||
         error.originalError instanceof ApolloError
       ) {
         return error
-      } else return new GraphQLError('Unknown error occured')
+      } else {
+        console.error(error)
+        return new GraphQLError('Unknown error occured')
+      }
     },
   })
 

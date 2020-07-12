@@ -1,6 +1,5 @@
 const axios = require('axios')
 const { isBookIdTypeISBN, getBookIdValue } = require('../../util/bookIdUtil')
-const { ApolloError } = require('apollo-server')
 
 exports.getBookDataFromBookId = async bookId => {
   if (isBookIdTypeISBN(bookId)) {
@@ -8,30 +7,27 @@ exports.getBookDataFromBookId = async bookId => {
       const { data } = await axios.get(
         `https://www.googleapis.com/books/v1/volumes?q=isbn:${getBookIdValue(
           bookId
-        )}&key=${process.env.GOOGLE_API_KEY}&country=SE`
+        )}&country=SE`
       )
       if (!data.items) return
       return extractDataFromVolumeInfo(data.items[0].volumeInfo)
     } catch (error) {
-      console.log(error.response.data)
-      throw new ApolloError('Failed to get book data')
+      console.error(error.response.data)
     }
   }
-  return
 }
 
 exports.getBooksDataFromQuery = async query => {
   if (!query) return []
   try {
     const { data } = await axios.get(
-      `https://www.googleapis.com/books/v1/volumes?q=${query}&maxResults=40&key=${process.env.GOOGLE_API_KEY}&country=SE`
+      `https://www.googleapis.com/books/v1/volumes?q=${query}&maxResults=40&country=SE`
     )
     if (data.totalItems === 0) return []
     const volumeInfoArray = data.items.map(item => item.volumeInfo)
     return volumeInfoArray.map(extractDataFromVolumeInfo).filter(book => book)
   } catch (error) {
-    console.log(error.response.data)
-    throw new ApolloError('Failed to get book data')
+    console.error(error.response.data)
   }
 }
 
