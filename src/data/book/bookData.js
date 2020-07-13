@@ -10,7 +10,6 @@ module.exports = {
     let data = await openLibrary.getBookDataFromBookId(bookId)
     if (!data) data = await googleBooksDB.getBookData(bookId)
     if (!data) {
-      console.log('api')
       data = await googleBooks.getBookDataFromBookId(bookId)
       if (!data) {
         throw new ApolloError('Failed to get book data')
