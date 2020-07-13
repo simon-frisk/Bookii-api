@@ -3,7 +3,7 @@ const mimeTypes = require('mime-types')
 const bcrypt = require('bcrypt')
 const { Storage } = require('@google-cloud/storage')
 const User = require('../data/user.model')
-const userService = require('../services/userService')
+const userUtil = require('../util/userUtil')
 const bookData = require('../data/book/bookData')
 const Auth = require('../util/Auth')
 const _ = require('lodash')
@@ -19,7 +19,7 @@ module.exports = {
       const correctPassword = await bcrypt.compare(password, user.password)
       if (!correctPassword)
         throw new UserInputError('Email or password not corrent')
-      return userService.signJWT(user._id)
+      return userUtil.signJWT(user._id)
     },
     async user(_, { _id: searchedId }, ctx) {
       const user = await Auth.checkSignInAndConsentAndReturn(
@@ -43,9 +43,9 @@ module.exports = {
     async signup(_, { user: { email, name, password, latestConsent } }) {
       if (latestConsent !== true)
         throw new UserInputError('You have to agree to policies to sign up')
-      const fixedEmail = await userService.validateAndFixEmail(email)
-      const fixedName = userService.validateAndFixName(name)
-      const hash = await userService.validatePasswordAndCreateHash(password)
+      const fixedEmail = await userUtil.validateAndFixEmail(email)
+      const fixedName = userUtil.validateAndFixName(name)
+      const hash = await userUtil.validatePasswordAndCreateHash(password)
       const user = await new User({
         email: fixedEmail,
         name: fixedName,
@@ -53,7 +53,7 @@ module.exports = {
         latestConsent,
       })
       await user.save()
-      return userService.signJWT(user._id)
+      return userUtil.signJWT(user._id)
     },
     async updateUser(
       __,
@@ -64,12 +64,10 @@ module.exports = {
         ctx.decodedToken._id
       )
       if (email)
-        user.email = await userService.validateAndFixEmail(email, user._id)
-      if (name) user.name = userService.validateAndFixName(name)
+        user.email = await userUtil.validateAndFixEmail(email, user._id)
+      if (name) user.name = userUtil.validateAndFixName(name)
       if (password)
-        user.password = await userService.validatePasswordAndCreateHash(
-          password
-        )
+        user.password = await userUtil.validatePasswordAndCreateHash(password)
       if (profilePicture) {
         const file = await profilePicture
         const bucket = storage.bucket('bookapp-282214.appspot.com')
