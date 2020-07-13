@@ -6,8 +6,7 @@ const User = require('../data/user.model')
 const userUtil = require('../util/userUtil')
 const bookData = require('../data/book/bookData')
 const Auth = require('../util/Auth')
-const _ = require('lodash')
-const url = require('url')
+const emailService = require('../services/emailService')
 
 const storage = new Storage()
 
@@ -37,6 +36,24 @@ module.exports = {
         user => user._id.toString() !== self._id.toString()
       )
       return usersNotSelf
+    },
+    async forgotpassword(_, { email }) {
+      const user = await User.findOne({ email })
+      if (!user) throw new UserInputError('No user with that email')
+
+      const password =
+        Math.floor(Math.random() * 9000000000000000) + 1000000000000000
+      const hash = await userUtil.validatePasswordAndCreateHash(
+        password.toString()
+      )
+      user.password = hash
+      await user.save()
+
+      emailService.sendMail({
+        to: user.email,
+        subject: 'Forgot password',
+        text: `Your password has been updated and the new password is ${password}`,
+      })
     },
   },
   Mutation: {
