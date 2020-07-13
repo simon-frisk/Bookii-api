@@ -11,9 +11,7 @@ module.exports = {
     if (!data) data = await googleBooksDB.getBookData(bookId)
     if (!data) {
       data = await googleBooks.getBookDataFromBookId(bookId)
-      if (!data) {
-        throw new ApolloError('Failed to get book data')
-      }
+      if (!data) throw new ApolloError('Failed to get book data')
       await googleBooksDB.storeBookData({
         ...data,
       })
@@ -21,6 +19,6 @@ module.exports = {
     return data
   },
   getByQuery: query => googleBooks.getBooksDataFromQuery(query),
-  getNYTBestSellers: () => nytBooks(),
+  getNYTBestSellers: () => nytBooks.getBestSellerLists(),
   getWikipediaDescription: (title, author) => wikipedia(title, author),
 }
