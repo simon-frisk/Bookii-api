@@ -54,6 +54,7 @@ module.exports = {
         subject: 'Forgot password',
         text: `Your password has been updated and the new password is ${password}`,
       })
+      return true
     },
   },
   Mutation: {
