@@ -49,7 +49,7 @@ module.exports = {
       user.password = hash
       await user.save()
 
-      emailService.sendMail({
+      await emailService.sendMail({
         to: user.email,
         subject: 'Forgot password',
         text: `Your password has been updated and the new password is ${password}`,
