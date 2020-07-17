@@ -5,6 +5,7 @@ module.exports = gql`
     signin(email: String!, password: String!): String!
     forgotpassword(email: String): Boolean!
     user(_id: ID): User
+    userSearch(name: String!): [User!]!
     book(bookId: String!): Book
     bookSearch(query: String!): [Book!]!
     bookLists: [BookList!]!

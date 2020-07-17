@@ -56,6 +56,11 @@ module.exports = {
       })
       return true
     },
+    async userSearch(_, { name }, ctx) {
+      await Auth.checkSignInAndConsentAndReturn(ctx.decodedToken._id)
+      const users = await User.find({ $text: { $search: name } })
+      return users
+    },
   },
   Mutation: {
     async signup(_, { user: { email, name, password, latestConsent } }) {

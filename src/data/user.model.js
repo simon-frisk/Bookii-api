@@ -28,5 +28,6 @@ const User = new Schema({
     },
   ],
 })
+User.index({ name: 'text' })
 
 module.exports = model('User', User)
