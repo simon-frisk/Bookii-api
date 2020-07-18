@@ -131,14 +131,12 @@ module.exports = {
         ctx.decodedToken._id
       )
       await User.findByIdAndDelete(user._id)
-      //TODO: delete from following, followers, flags etc.
       return user
     },
     async follow(_, { _id }, ctx) {
       const user = await Auth.checkSignInAndConsentAndReturn(
         ctx.decodedToken._id
       )
-      //TODO: validate _id is an objectId (and do this in all other similar places too. Otherwise this will throw an internal server error instead of userinputerror)
       const followed = await User.findById(_id)
       if (!followed)
         throw new UserInputError('The user to follow does not exist')

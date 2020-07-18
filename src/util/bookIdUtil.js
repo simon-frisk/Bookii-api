@@ -1,7 +1,6 @@
 exports.isBookId = bookId => {
   if (!bookId) return false
   if (!(bookId.split(':').length === 2)) return false
-  //TODO: add more to check if valid
   return true
 }
 
