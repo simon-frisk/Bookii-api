@@ -14,9 +14,16 @@ module.exports = gql`
   }
 
   type Mutation {
-    signup(user: SignUpInput!): String!
-    updateUser(user: UserUpdateInput!): User!
-    deleteUser: User!
+    signup(
+      email: String!
+      name: String!
+      password: String!
+      latestConsent: Boolean!
+    ): String!
+    updateUser(name: String!, email: String!): User!
+    changeProfilePicture(profilePicture: Upload): User!
+    changePassword(password: String!): Boolean!
+    deleteUser: Boolean!
 
     addFeedBook(
       bookId: String!
@@ -27,9 +34,9 @@ module.exports = gql`
     removeFeedBook(_id: ID!): FeedBook!
     updateFeedBook(
       _id: ID!
-      comment: String
-      date: String
-      favorite: Boolean
+      comment: String!
+      date: String!
+      favorite: Boolean!
     ): FeedBook!
 
     addWishBook(bookId: String!): String
@@ -84,19 +91,5 @@ module.exports = gql`
   type BookList {
     name: String!
     books: [Book!]!
-  }
-
-  input SignUpInput {
-    email: String!
-    name: String!
-    password: String!
-    latestConsent: Boolean!
-  }
-
-  input UserUpdateInput {
-    email: String
-    name: String
-    password: String
-    profilePicture: Upload
   }
 `

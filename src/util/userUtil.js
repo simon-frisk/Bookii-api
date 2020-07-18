@@ -2,6 +2,10 @@ const { UserInputError } = require('apollo-server')
 const User = require('../data/user.model')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken-promisified')
+const { Storage } = require('@google-cloud/storage')
+const mimeTypes = require('mime-types')
+
+const storage = new Storage()
 
 module.exports = {
   async validateAndFixEmail(email, _id) {
@@ -26,6 +30,38 @@ module.exports = {
   },
   async signJWT(_id) {
     return jwt.signAsync({ _id }, process.env.JWT_SECRET)
+  },
+  async storeProfilePicture(profilePicture, oldPath, id) {
+    const file = await profilePicture
+    const bucket = storage.bucket('bookapp-282214.appspot.com')
+
+    if (oldPath) {
+      try {
+        const array = oldPath.split('/')
+        const prevFileName = array.slice(array.length - 2).join('/')
+        await bucket.file(prevFileName).delete()
+      } catch (e) {}
+    }
+
+    const fileName = `profile_pictures/profilePicture_${Date.now()}_${id}.${mimeTypes.extension(
+      file.mimetype
+    )}`
+
+    await new Promise(resolve => {
+      file
+        .createReadStream()
+        .pipe(
+          bucket.file(fileName).createWriteStream({
+            resumable: false,
+            gzip: true,
+          })
+        )
+        .on('finish', resolve)
+    })
+
+    return (
+      'https://storage.googleapis.com/bookapp-282214.appspot.com/' + fileName
+    )
   },
 }
 

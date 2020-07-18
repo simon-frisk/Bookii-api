@@ -7,10 +7,10 @@ module.exports = {
       const user = await Auth.checkSignInAndConsentAndReturn(
         ctx.decodedToken._id
       )
-      const numToReturn = 9
+      const numToReturn = 7
       await user.populate('following').execPopulate()
       let feedBooks = user.following.reduce(
-        (array, following) => [...array, ...following.feedBooks],
+        (array, following) => array.concat(following.feedBooks),
         []
       )
       feedBooks.sort(

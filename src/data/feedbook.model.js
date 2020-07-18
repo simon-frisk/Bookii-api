@@ -1,5 +1,4 @@
 const { Schema } = require('mongoose')
-const { isBookId } = require('../util/bookIdUtil')
 
 module.exports = new Schema({
   bookId: String,

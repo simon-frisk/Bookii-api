@@ -22,9 +22,14 @@ module.exports = {
       )
       const toUpdate = user.feedBooks.id(_id)
       if (!toUpdate) throw new UserInputError('Feedbook to update not found')
-      if (_.isString(toUpdate.comment)) toUpdate.comment = comment
-      if (_.isBoolean(toUpdate.favorite)) toUpdate.favorite = favorite
-      if (Date.parse(date)) toUpdate.date = date
+      if (!_.isString(toUpdate.comment))
+        throw new UserInputError('Invalid comment')
+      if (!_.isBoolean(toUpdate.favorite))
+        throw new UserInputError('Invalid favorite')
+      if (!Date.parse(date)) throw new UserInputError('Invalid date')
+      toUpdate.comment = comment
+      toUpdate.favorite = favorite
+      toUpdate.date = date
       await user.save()
       return toUpdate
     },

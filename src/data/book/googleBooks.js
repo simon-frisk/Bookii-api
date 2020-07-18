@@ -1,20 +1,18 @@
 const axios = require('axios')
-const { isBookIdTypeISBN, getBookIdValue } = require('../../util/bookIdUtil')
+const { getBookIdValue } = require('../../util/bookIdUtil')
 const bookUtil = require('../../util/bookUtil')
 
 exports.getBookDataFromBookId = async bookId => {
-  if (isBookIdTypeISBN(bookId)) {
-    try {
-      const { data } = await axios.get(
-        `https://www.googleapis.com/books/v1/volumes?q=isbn:${getBookIdValue(
-          bookId
-        )}&country=SE&key=${process.env.GOOGLE_API_KEY}`
-      )
-      if (!data.items) return
-      return extractDataFromVolumeInfo(data.items[0].volumeInfo)
-    } catch (error) {
-      console.error(error.response.data)
-    }
+  try {
+    const { data } = await axios.get(
+      `https://www.googleapis.com/books/v1/volumes?q=isbn:${getBookIdValue(
+        bookId
+      )}&country=SE&key=${process.env.GOOGLE_API_KEY}`
+    )
+    if (!data.items) return
+    return extractDataFromVolumeInfo(data.items[0].volumeInfo)
+  } catch (error) {
+    console.error(error.response.data)
   }
 }
 

@@ -1,14 +1,10 @@
 const { UserInputError } = require('apollo-server')
-const mimeTypes = require('mime-types')
 const bcrypt = require('bcrypt')
-const { Storage } = require('@google-cloud/storage')
 const User = require('../data/user.model')
 const userUtil = require('../util/userUtil')
 const bookData = require('../data/book/bookData')
 const Auth = require('../util/Auth')
 const emailService = require('../services/emailService')
-
-const storage = new Storage()
 
 module.exports = {
   Query: {
@@ -63,7 +59,7 @@ module.exports = {
     },
   },
   Mutation: {
-    async signup(_, { user: { email, name, password, latestConsent } }) {
+    async signup(_, { email, name, password, latestConsent }) {
       if (latestConsent !== true)
         throw new UserInputError('You have to agree to policies to sign up')
       const fixedEmail = await userUtil.validateAndFixEmail(email)
@@ -78,51 +74,34 @@ module.exports = {
       await user.save()
       return userUtil.signJWT(user._id)
     },
-    async updateUser(
-      __,
-      { user: { email, password, name, profilePicture } },
-      ctx
-    ) {
+    async updateUser(__, { email, name }, ctx) {
       const user = await Auth.checkSignInAndConsentAndReturn(
         ctx.decodedToken._id
       )
-      if (email)
-        user.email = await userUtil.validateAndFixEmail(email, user._id)
-      if (name) user.name = userUtil.validateAndFixName(name)
-      if (password)
-        user.password = await userUtil.validatePasswordAndCreateHash(password)
-      if (profilePicture) {
-        const file = await profilePicture
-        const bucket = storage.bucket('bookapp-282214.appspot.com')
-
-        if (user.profilePicturePath) {
-          try {
-            const array = user.profilePicturePath.split('/')
-            const prevFileName = array.slice(array.length - 2).join('/')
-            await bucket.file(prevFileName).delete()
-          } catch (e) {}
-        }
-
-        const fileName = `profile_pictures/profilePicture_${Date.now()}_${
+      user.email = await userUtil.validateAndFixEmail(email, user._id)
+      user.name = userUtil.validateAndFixName(name)
+      await user.save()
+      return user
+    },
+    async changePassword(__, { password }, ctx) {
+      const user = await Auth.checkSignInAndConsentAndReturn(
+        ctx.decodedToken._id
+      )
+      user.password = await userUtil.validatePasswordAndCreateHash(password)
+      await user.save()
+      return true
+    },
+    async changeProfilePicture(__, { profilePicture }, ctx) {
+      const user = await Auth.checkSignInAndConsentAndReturn(
+        ctx.decodedToken._id
+      )
+      if (!profilePicture) user.profilePicturePath = null
+      else
+        user.profilePicturePath = await userUtil.storeProfilePicture(
+          profilePicture,
+          user.profilePicturePath,
           user._id
-        }.${mimeTypes.extension(file.mimetype)}`
-
-        await new Promise(resolve => {
-          file
-            .createReadStream()
-            .pipe(
-              bucket.file(fileName).createWriteStream({
-                resumable: false,
-                gzip: true,
-              })
-            )
-            .on('finish', resolve)
-        })
-
-        user.profilePicturePath =
-          'https://storage.googleapis.com/bookapp-282214.appspot.com/' +
-          fileName
-      }
+        )
       await user.save()
       return user
     },
@@ -131,7 +110,7 @@ module.exports = {
         ctx.decodedToken._id
       )
       await User.findByIdAndDelete(user._id)
-      return user
+      return true
     },
     async follow(_, { _id }, ctx) {
       const user = await Auth.checkSignInAndConsentAndReturn(
