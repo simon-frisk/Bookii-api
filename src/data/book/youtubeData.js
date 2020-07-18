@@ -6,6 +6,7 @@ exports.getVideoIds = async title => {
     return data.items.map(video => video.id.videoId)
   } catch (error) {
     console.log(error.message)
+    return []
   }
 }
 
