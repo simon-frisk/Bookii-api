@@ -1,8 +1,12 @@
 const axios = require('axios')
 
 exports.getVideoIds = async title => {
-  const { data } = await axios.get(createUrl(title))
-  return data.items.map(video => video.id.videoId)
+  try {
+    const { data } = await axios.get(createUrl(title))
+    return data.items.map(video => video.id.videoId)
+  } catch (error) {
+    console.log(error.message)
+  }
 }
 
 function createUrl(title) {
