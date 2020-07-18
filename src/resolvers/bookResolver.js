@@ -23,6 +23,9 @@ module.exports = {
       const author = book.authors ? book.authors[0] : null
       return bookData.getWikipediaDescription(book.title, author)
     },
+    async youtubevideos(book) {
+      return bookData.getYoutubeVidoes(book.title)
+    },
     async onselffeed(book, _, ctx) {
       const user = await Auth.checkSignInAndConsentAndReturn(
         ctx.decodedToken._id

@@ -75,6 +75,7 @@ module.exports = gql`
     published: String
     thumbnail: String
     wikipediadescription: String
+    youtubevideos: [String!]!
     onselffeed: [FeedBook!]!
     onfollowingfeed: [FeedBook!]!
     isWished: Boolean!

@@ -2,6 +2,7 @@ const googleBooks = require('./googleBooks')
 const nytBooks = require('./nytBooks')
 const wikipedia = require('./wikipedia')
 const googleBooksDB = require('./googleBooksDB')
+const youtubeData = require('./youtubeData')
 const { ApolloError } = require('apollo-server')
 
 module.exports = {
@@ -19,4 +20,5 @@ module.exports = {
   getByQuery: query => googleBooks.getBooksDataFromQuery(query),
   getNYTBestSellers: () => nytBooks.getBestSellerLists(),
   getWikipediaDescription: (title, author) => wikipedia(title, author),
+  getYoutubeVidoes: title => youtubeData.getVideoIds(title),
 }
