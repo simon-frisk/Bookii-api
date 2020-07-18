@@ -18,7 +18,7 @@ module.exports = {
     return data
   },
   getByQuery: query => googleBooks.getBooksDataFromQuery(query),
-  getNYTBestSellers: () => nytBooks.getBestSellerLists(),
+  getNYTBestSellerLists: () => nytBooks.getBestSellerLists(),
   getWikipediaDescription: (title, author) => wikipedia(title, author),
   getYoutubeVidoes: title => youtubeData.getVideoIds(title),
 }

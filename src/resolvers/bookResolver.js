@@ -13,10 +13,6 @@ module.exports = {
       await Auth.checkSignInAndConsentAndReturn(ctx.decodedToken._id)
       return bookData.getByQuery(query)
     },
-    async bookLists(_, __, ctx) {
-      await Auth.checkSignInAndConsentAndReturn(ctx.decodedToken._id)
-      return bookData.getNYTBestSellers()
-    },
   },
   Book: {
     async wikipediadescription(book) {

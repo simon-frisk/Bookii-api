@@ -4,6 +4,6 @@ const datastore = new Datastore()
 
 exports.getBestSellerLists = async () => {
   const query = datastore.createQuery('NytimesBestsellerLists')
-  const [result] = await datastore.runQuery(query)
-  return result
+  const [lists] = await datastore.runQuery(query)
+  return lists.map(list => ({ ...list, name: list[datastore.KEY].name }))
 }
