@@ -6,5 +6,5 @@ exports.getVideoIds = async title => {
 }
 
 function createUrl(title) {
-  return `https://www.googleapis.com/youtube/v3/search?part=id&maxResults=5&q=${title}+book&type=video`
+  return `https://www.googleapis.com/youtube/v3/search?part=id&maxResults=5&q=${title}+book&type=video&key=${process.env.GOOGLE_API_KEY}`
 }

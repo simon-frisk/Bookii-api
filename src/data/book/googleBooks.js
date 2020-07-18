@@ -8,7 +8,7 @@ exports.getBookDataFromBookId = async bookId => {
       const { data } = await axios.get(
         `https://www.googleapis.com/books/v1/volumes?q=isbn:${getBookIdValue(
           bookId
-        )}&country=SE`
+        )}&country=SE&key=${process.env.GOOGLE_API_KEY}`
       )
       if (!data.items) return
       return extractDataFromVolumeInfo(data.items[0].volumeInfo)
@@ -22,7 +22,7 @@ exports.getBooksDataFromQuery = async query => {
   if (!query) return []
   try {
     const { data } = await axios.get(
-      `https://www.googleapis.com/books/v1/volumes?q=${query}&maxResults=40&country=SE`
+      `https://www.googleapis.com/books/v1/volumes?q=${query}&maxResults=40&country=SE&key=${process.env.GOOGLE_API_KEY}`
     )
     if (data.totalItems === 0) return []
     const volumeInfoArray = data.items.map(item => item.volumeInfo)
