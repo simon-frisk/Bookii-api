@@ -25,7 +25,7 @@ async function getVideoIdsFromDB(title) {
   const [videoIds] = await datastore.get(
     datastore.key(['YoutubeVideos', title])
   )
-  return videoIds.ids
+  if (videoIds) return videoIds.ids
 }
 
 async function storeVideoIds(title, ids) {
@@ -40,5 +40,5 @@ async function storeVideoIds(title, ids) {
 }
 
 function createUrl(title) {
-  return `https://www.googleapis.com/youtube/v3/search?part=id&q=${title}+book&type=video&key=${process.env.GOOGLE_API_KEY}`
+  return `https://www.googleapis.com/youtube/v3/search?part=id&q=${title}+book&type=video&videoEmbeddable=true&videoDuration=medium&key=${process.env.GOOGLE_API_KEY}`
 }
