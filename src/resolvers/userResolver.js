@@ -158,13 +158,11 @@ module.exports = {
       if (user.inappropriateFlags.includes(self._id)) {
         const index = user.inappropriateFlags.indexOf(self._id)
         user.inappropriateFlags.splice(index, 1)
-        await user.save()
-        return false
       } else {
         user.inappropriateFlags.push(self._id)
-        await user.save()
-        return user
       }
+      await user.save()
+      return user
     },
     async acceptLatestPolicies(_, __, ctx) {
       const user = await Auth.checkSignInAndReturn(ctx.decodedToken._id)
