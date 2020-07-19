@@ -44,7 +44,7 @@ module.exports = gql`
 
     follow(_id: ID!): User!
     unfollow(_id: ID!): User!
-    toggleinappropriateflagged(_id: ID!): Boolean!
+    toggleinappropriateflagged(_id: ID!): User!
 
     acceptLatestPolicies: Boolean!
   }

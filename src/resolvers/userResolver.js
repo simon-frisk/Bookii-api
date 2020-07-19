@@ -163,7 +163,7 @@ module.exports = {
       } else {
         user.inappropriateFlags.push(self._id)
         await user.save()
-        return true
+        return user
       }
     },
     async acceptLatestPolicies(_, __, ctx) {
