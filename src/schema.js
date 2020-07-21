@@ -8,7 +8,8 @@ module.exports = gql`
     userSearch(name: String!): [User!]!
     book(bookId: String!): Book
     bookSearch(query: String!): [Book!]!
-    bookLists: [BookList!]!
+    bestSellerLists: [BookList!]!
+    bookList(name: String!): BookList!
     users: [User!]!
     feed(after: ID): [FeedBook!]!
   }

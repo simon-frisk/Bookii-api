@@ -1,13 +1,18 @@
 const bookData = require('../data/book/bookData')
 const _ = require('lodash')
 const Auth = require('../util/Auth')
+const { getBestSellerList } = require('../data/book/nytBooks')
+const { UserInputError } = require('apollo-server')
 
 module.exports = {
   Query: {
-    async bookLists(_, { name }, ctx) {
+    async bestSellerLists(_, __, ctx) {
       await Auth.checkSignInAndConsentAndReturn(ctx.decodedToken._id)
-      if (name) return bookData.getNYTBestSellerList(name)
-      else return bookData.getNYTBestSellerLists()
+      return bookData.getNYTBestSellerLists()
+    },
+    async bookList(_, { name }, ctx) {
+      await Auth.checkSignInAndConsentAndReturn(ctx.decodedToken._id)
+      return bookData.getNYTBestSellerList(name)
     },
   },
   BookList: {
