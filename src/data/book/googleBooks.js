@@ -20,11 +20,15 @@ exports.getBooksDataFromQuery = async query => {
   if (!query) return []
   try {
     const { data } = await axios.get(
-      `https://www.googleapis.com/books/v1/volumes?q=${query}&maxResults=40&country=SE&key=${process.env.GOOGLE_API_KEY}`
+      `https://www.googleapis.com/books/v1/volumes?q=${query}&maxResults=10&country=SE&key=${process.env.GOOGLE_API_KEY}`
     )
     if (data.totalItems === 0) return []
     const volumeInfoArray = data.items.map(item => item.volumeInfo)
-    return volumeInfoArray.map(extractDataFromVolumeInfo).filter(book => book)
+    const books = volumeInfoArray
+      .map(extractDataFromVolumeInfo)
+      .filter(book => book)
+    const filteredBooks = filterSearchResults(books)
+    return filteredBooks
   } catch (error) {
     console.error(error.response.data)
   }
@@ -58,4 +62,13 @@ const extractDataFromVolumeInfo = data => {
     published: data.publishedDate,
     thumbnail: data.imageLinks && data.imageLinks.thumbnail,
   }
+}
+
+function filterSearchResults(searchBooks) {
+  const books = []
+  searchBooks.forEach(searchBook => {
+    if (!books.some(book => book.title === searchBook.title))
+      books.push(searchBook)
+  })
+  return books
 }
