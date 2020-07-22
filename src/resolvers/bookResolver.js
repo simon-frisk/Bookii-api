@@ -1,6 +1,7 @@
 const bookData = require('../data/book/bookData')
 const Auth = require('../util/Auth')
 const User = require('../data/user.model')
+const categories = require('../data/categories')
 
 module.exports = {
   Query: {
@@ -14,6 +15,15 @@ module.exports = {
     },
   },
   Book: {
+    async categories(book) {
+      if (!book.categories) return null
+      const bookCategories = []
+      categories.forEach(category => {
+        if (book.categories.includes(category.name))
+          bookCategories.push(category)
+      })
+      return bookCategories
+    },
     async wikipediadescription(book) {
       const author = book.authors ? book.authors[0] : null
       return bookData.getWikipediaDescription(book.title, author)
