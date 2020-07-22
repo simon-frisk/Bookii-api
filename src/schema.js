@@ -91,6 +91,8 @@ module.exports = gql`
 
   type BookList {
     name: String!
+    description: String!
+    icon: String!
     books: [Book!]!
   }
 `
