@@ -7,6 +7,9 @@ module.exports = {
     const [book] = await datastore.get(
       datastore.key(['Book', Number(bookIdUtil.getBookIdValue(bookId))])
     )
-    return book
+    return {
+      ...book,
+      bookId,
+    }
   },
 }
