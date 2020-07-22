@@ -8,3 +8,8 @@ exports.getBookIdValue = bookId => {
   if (!this.isBookId(bookId)) throw new Error('Invalid bookId')
   return bookId.split(':')[1]
 }
+
+exports.getBookIdType = bookId => {
+  if (!this.isBookId(bookId)) throw new Error('Invalid bookId')
+  return bookId.split(':')[0]
+}
