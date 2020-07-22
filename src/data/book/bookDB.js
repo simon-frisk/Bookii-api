@@ -12,4 +12,14 @@ module.exports = {
       bookId,
     }
   },
+  async getByCategory(category) {
+    const query = datastore
+      .createQuery('Book')
+      .filter('categories', '=', category)
+    const [books] = await datastore.runQuery(query)
+    return books.map(book => ({
+      ...book,
+      bookId: 'book:' + book[datastore.KEY].id,
+    }))
+  },
 }

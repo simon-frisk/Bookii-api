@@ -11,6 +11,8 @@ module.exports = gql`
     bookSearch(query: String!): [Book!]!
     bestSellerLists: [BookList!]!
     bookList(name: String!): BookList!
+    categories: [Category!]!
+    category(name: String!): Category!
     feed(after: ID): [FeedBook!]!
   }
 
@@ -91,7 +93,12 @@ module.exports = gql`
 
   type BookList {
     name: String!
-    description: String!
+    icon: String!
+    books: [Book!]!
+  }
+
+  type Category {
+    name: String!
     icon: String!
     books: [Book!]!
   }

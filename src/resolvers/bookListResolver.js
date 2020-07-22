@@ -1,8 +1,6 @@
 const bookData = require('../data/book/bookData')
 const _ = require('lodash')
 const Auth = require('../util/Auth')
-const { getBestSellerList } = require('../data/book/nytBooks')
-const { UserInputError } = require('apollo-server')
 
 module.exports = {
   Query: {
