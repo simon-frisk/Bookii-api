@@ -6,11 +6,11 @@ module.exports = gql`
     forgotpassword(email: String): Boolean!
     user(_id: ID): User
     userSearch(name: String!): [User!]!
+    recommendedUsers: [User!]!
     book(bookId: String!): Book
     bookSearch(query: String!): [Book!]!
     bestSellerLists: [BookList!]!
     bookList(name: String!): BookList!
-    users: [User!]!
     feed(after: ID): [FeedBook!]!
   }
 

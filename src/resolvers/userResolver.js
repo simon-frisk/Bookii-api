@@ -23,15 +23,18 @@ module.exports = {
       if (searchedId) return User.findById(searchedId)
       return user
     },
-    async users(_, __, ctx) {
+    async recommendedUsers(_, __, ctx) {
       const self = await Auth.checkSignInAndConsentAndReturn(
         ctx.decodedToken._id
       )
       const users = await User.find()
-      const usersNotSelf = users.filter(
-        user => user._id.toString() !== self._id.toString()
-      )
-      return usersNotSelf
+      return users
+        .filter(user => {
+          if (user._id.toString() === self._id.toString()) return false
+          if (self.following.includes(user._id)) return false
+          return true
+        })
+        .sort((a, b) => b.feedBooks.length - a.feedBooks.length)
     },
     async forgotpassword(_, { email }) {
       const user = await User.findOne({ email })
