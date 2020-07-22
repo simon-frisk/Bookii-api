@@ -4,7 +4,7 @@ const { UserInputError } = require('apollo-server')
 const datastore = new Datastore()
 
 exports.getBestSellerLists = async () => {
-  const query = datastore.createQuery('NytimesBestsellerLists')
+  const query = datastore.createQuery('NytimesBestsellerLists').order('order')
   const [lists] = await datastore.runQuery(query)
   return lists.map(list => ({ ...list, name: list[datastore.KEY].name }))
 }
