@@ -1,7 +1,8 @@
-const User = require('../data/user.model')
+const User = require('./user.model')
 const bookIdUtil = require('../util/bookIdUtil')
-const bookData = require('../data/book/bookData')
+const bookData = require('./book/bookData')
 const { Datastore } = require('@google-cloud/datastore')
+const datastore = new Datastore()
 
 exports.scanAndReplace = async () => {
   await scanAllUsers()
@@ -11,7 +12,7 @@ async function scanAllUsers() {
   const users = await User.find()
   for (const user of users) {
     user.feedBooks = await Promise.all(
-      user.feedBooks.map(async (feedBook, index) => {
+      user.feedBooks.map(async feedBook => {
         feedBook.bookId = await getUpdatedBookId(feedBook.bookId)
         return feedBook
       })
@@ -32,7 +33,7 @@ async function getUpdatedBookId(bookId) {
       book.authors
     )
     if (inDb) {
-      return `book:${inDb[Datastore.KEY].id}`
+      return `book:${inDb[datastore.KEY].id}`
     } else {
       return bookId
     }
