@@ -22,4 +22,17 @@ module.exports = {
       bookId: 'book:' + book[datastore.KEY].id,
     }))
   },
+
+  async searchTitleAndAuthors(title, authors) {
+    const query = datastore.createQuery('Book').filter('title', '=', title)
+    const [books] = await datastore.runQuery(query)
+    if (!books.length) return
+    books.filter(book =>
+      book.authors.some(author =>
+        authors.some(bookAuthor => bookAuthor === author)
+      )
+    )
+    if (books.length !== 1) return
+    return books[0]
+  },
 }

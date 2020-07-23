@@ -32,4 +32,6 @@ module.exports = {
   getByCategory: name => bookDB.getByCategory(name),
   getWikipediaDescription: (title, author) => wikipedia(title, author),
   getYoutubeVidoes: title => youtubeData.getVideoIds(title),
+  getSearchDBTitleAndAuthors: (title, authors) =>
+    bookDB.searchTitleAndAuthors(title, authors),
 }
