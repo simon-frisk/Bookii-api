@@ -1,5 +1,5 @@
 const nodemailer = require('nodemailer')
-const { ApolloError } = require('apollo-server')
+const { ApolloError } = require('apollo-server-express')
 
 const transport = nodemailer.createTransport({
   host: 'smtp.migadu.com',

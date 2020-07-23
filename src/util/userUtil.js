@@ -1,4 +1,4 @@
-const { UserInputError } = require('apollo-server')
+const { UserInputError } = require('apollo-server-express')
 const User = require('../data/user.model')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken-promisified')

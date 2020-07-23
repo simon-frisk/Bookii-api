@@ -1,5 +1,5 @@
 const { Datastore } = require('@google-cloud/datastore')
-const { UserInputError } = require('apollo-server')
+const { UserInputError } = require('apollo-server-express')
 
 const datastore = new Datastore()
 

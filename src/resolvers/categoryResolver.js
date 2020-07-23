@@ -1,7 +1,7 @@
 const Auth = require('../util/Auth')
 const categories = require('../data/categories')
 const bookData = require('../data/book/bookData')
-const { UserInputError } = require('apollo-server')
+const { UserInputError } = require('apollo-server-express')
 
 module.exports = {
   Query: {

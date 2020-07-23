@@ -2,7 +2,7 @@ const _ = require('lodash')
 const Auth = require('../util/Auth')
 const bookData = require('../data/book/bookData')
 const { isBookId } = require('../util/bookIdUtil')
-const { UserInputError } = require('apollo-server')
+const { UserInputError } = require('apollo-server-express')
 
 module.exports = {
   Mutation: {

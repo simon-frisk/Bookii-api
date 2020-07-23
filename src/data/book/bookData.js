@@ -3,7 +3,7 @@ const nytBooks = require('./nytBooks')
 const wikipedia = require('./wikipedia')
 const googleBooksDB = require('./googleBooksDB')
 const youtubeData = require('./youtubeData')
-const { ApolloError } = require('apollo-server')
+const { ApolloError } = require('apollo-server-express')
 const bookIdUtil = require('../../util/bookIdUtil')
 const bookDB = require('./bookDB')
 

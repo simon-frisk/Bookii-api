@@ -1,4 +1,4 @@
-const { UserInputError } = require('apollo-server')
+const { UserInputError } = require('apollo-server-express')
 const bcrypt = require('bcrypt')
 const User = require('../data/user.model')
 const userUtil = require('../util/userUtil')
