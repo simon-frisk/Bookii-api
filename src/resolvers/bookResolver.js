@@ -2,6 +2,7 @@ const bookData = require('../data/book/bookData')
 const Auth = require('../util/Auth')
 const User = require('../data/user.model')
 const categories = require('../data/categories')
+const Wikipedia = require('../data/Wikipedia')
 
 module.exports = {
   Query: {
@@ -25,8 +26,7 @@ module.exports = {
       return bookCategories
     },
     async wikipediadescription(book) {
-      const author = book.authors ? book.authors[0] : null
-      return bookData.getWikipediaDescription(book.title, author)
+      return Wikipedia.getExtract(book.title, book.authors)
     },
     async youtubevideos(book) {
       return bookData.getYoutubeVidoes(book.title)
