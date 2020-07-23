@@ -2,6 +2,7 @@ const express = require('express')
 const dotenv = require('dotenv')
 const connectDB = require('./util/db')
 const apollo = require('./apollo')
+const restRouter = require('./rest')
 
 const PORT = process.env.PORT || 4000
 const app = express()
@@ -12,6 +13,7 @@ async function main() {
 
   const apolloServer = apollo()
 
+  app.use('/rest', restRouter)
   app.use(apolloServer.getMiddleware())
 
   app.listen(PORT, () => {

@@ -1,0 +1,7 @@
+cron:
+  - description: Get daily booklists
+    url: /rest/nytimesbestsellers
+    schedule: every 24 hours
+  - description: Scan and replace bookids
+    url: /rest/scanbookids
+    schedule: every 24 hours
