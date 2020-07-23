@@ -1,11 +1,11 @@
 const axios = require('axios')
-const { getBookIdValue } = require('../../util/bookIdUtil')
 const bookUtil = require('../../util/bookUtil')
+const bookIdUtil = require('../../util/bookIdUtil')
 
 exports.getBookDataFromBookId = async bookId => {
   try {
     const { data } = await axios.get(
-      `https://www.googleapis.com/books/v1/volumes?q=isbn:${getBookIdValue(
+      `https://www.googleapis.com/books/v1/volumes?q=isbn:${bookIdUtil.getBookIdValue(
         bookId
       )}&country=SE&key=${process.env.GOOGLE_API_KEY}`
     )
