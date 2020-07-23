@@ -9,7 +9,7 @@ module.exports = [
   },
   {
     name: 'Biographies and memoirs',
-    keywords: ['biography', 'memoir'],
+    keywords: ['biography', 'memoir', 'autobiography'],
     icon: emoji.find('👩').emoji,
   },
   { name: 'Science', keywords: ['technology'], icon: emoji.find('👩‍🔬').emoji },
