@@ -1,11 +1,11 @@
 const emoji = require('node-emoji')
 
 module.exports = [
-  { name: 'Fiction', keywords: ['novel'], icon: emoji.find('🦄').emoji },
+  { name: 'Fiction', keywords: ['novel'], icon: emoji.find('📕').emoji },
   {
     name: 'Nonfiction',
     keywords: ['non-fiction', 'nonfiction'],
-    icon: emoji.find('📖').emoji,
+    icon: emoji.find('📗').emoji,
   },
   {
     name: 'Biographies and memoirs',
@@ -20,7 +20,7 @@ module.exports = [
     icon: emoji.find('📖').emoji,
   },
   { name: 'Business', icon: emoji.find('🏢').emoji },
-  //{ name: 'Self help' },
+  { name: 'Fantasy', icon: emoji.find('🦄').emoji },
   { name: 'Science fiction', icon: emoji.find('🚀').emoji },
-  //{ name: 'Fantasy' },
+  { name: 'Children', icon: emoji.find('🧒').emoji },
 ]
