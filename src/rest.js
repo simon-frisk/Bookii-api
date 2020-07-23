@@ -1,10 +1,10 @@
 const express = require('express')
-const bookData = require('./data/book/bookData')
+const NyTimes = require('./data/NyTimes')
 const router = express.Router()
 const BookIdScan = require('./data/BookIdScan')
 
 router.get('/nytimesbestsellers', async (_, res) => {
-  await bookData.storeBestSellerLists()
+  await NyTimes.storeBestSellerLists()
   res.end()
 })
 
