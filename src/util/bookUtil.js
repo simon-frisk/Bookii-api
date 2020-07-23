@@ -1,19 +1,19 @@
 module.exports = {
   extractSubtitleAndMainTitleFromTitles(dataTitle, dataSubtitle) {
-    let title, subTitle
+    let title, subtitle
     if (dataTitle.includes(':')) {
       const index = dataTitle.indexOf(':')
       title = dataTitle.slice(0, index).trim()
 
       if (!dataSubtitle) {
-        subTitle = dataTitle.slice(index + 1).trim()
+        subtitle = dataTitle.slice(index + 1).trim()
       } else {
-        subTitle = dataSubtitle
+        subtitle = dataSubtitle
       }
     } else {
       title = dataTitle
-      subTitle = dataSubtitle
+      subtitle = dataSubtitle
     }
-    return { title, subTitle }
+    return { title, subtitle }
   },
 }

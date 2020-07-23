@@ -77,7 +77,7 @@ module.exports = gql`
   type Book {
     bookId: String!
     title: String!
-    subTitle: String
+    subtitle: String
     description: String
     authors: [String!]
     categories: [Category!]

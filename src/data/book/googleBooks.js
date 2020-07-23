@@ -46,15 +46,15 @@ const extractDataFromVolumeInfo = data => {
 
   if (!data.title) return
 
-  const { title, subTitle } = bookUtil.extractSubtitleAndMainTitleFromTitles(
+  const { title, subtitle } = bookUtil.extractSubtitleAndMainTitleFromTitles(
     data.title,
-    data.subTitle
+    data.subtitle
   )
 
   return {
     bookId,
     title,
-    subTitle,
+    subtitle,
     description: data.description,
     authors: data.authors,
     pages: data.pageCount,

@@ -5,7 +5,7 @@ const datastore = new Datastore()
 const storeBookData = async ({
   bookId,
   title,
-  subTitle,
+  subtitle,
   description,
   authors,
   pages,
@@ -18,7 +18,7 @@ const storeBookData = async ({
     data: [
       { name: 'bookId', value: bookId },
       { name: 'title', value: title },
-      subTitle ? { name: 'subTitle', value: subTitle } : undefined,
+      subtitle ? { name: 'subtitle', value: subtitle } : undefined,
       description
         ? { name: 'description', value: description, excludeFromIndexes: true }
         : undefined,
