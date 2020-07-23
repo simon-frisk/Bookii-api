@@ -6,7 +6,6 @@ const storeBookData = async ({
   bookId,
   title,
   subtitle,
-  description,
   authors,
   pages,
   publisher,
@@ -19,9 +18,6 @@ const storeBookData = async ({
       { name: 'bookId', value: bookId },
       { name: 'title', value: title },
       subtitle ? { name: 'subtitle', value: subtitle } : undefined,
-      description
-        ? { name: 'description', value: description, excludeFromIndexes: true }
-        : undefined,
       authors ? { name: 'authors', value: authors } : undefined,
       pages ? { name: 'pages', value: pages } : undefined,
       publisher ? { name: 'publisher', value: publisher } : undefined,

@@ -78,11 +78,9 @@ module.exports = gql`
     bookId: String!
     title: String!
     subtitle: String
-    description: String
     authors: [String!]
     categories: [Category!]
     pages: Int
-    publisher: String
     published: String
     thumbnail: String
     wikipediadescription: String

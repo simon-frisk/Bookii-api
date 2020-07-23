@@ -55,7 +55,6 @@ const extractDataFromVolumeInfo = data => {
     bookId,
     title,
     subtitle,
-    description: data.description,
     authors: data.authors,
     pages: data.pageCount,
     publisher: data.publisher,
