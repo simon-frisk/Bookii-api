@@ -11,9 +11,7 @@ exports.getBookDataFromBookId = async bookId => {
     )
     if (!data.items) return
     return extractDataFromVolumeInfo(data.items[0].volumeInfo)
-  } catch (error) {
-    console.error(error.response.data)
-  }
+  } catch (error) {}
 }
 
 exports.getBooksDataFromQuery = async query => {
@@ -29,9 +27,7 @@ exports.getBooksDataFromQuery = async query => {
       .filter(book => book)
     const filteredBooks = filterSearchResults(books)
     return filteredBooks
-  } catch (error) {
-    console.error(error.response.data)
-  }
+  } catch (error) {}
 }
 
 const extractDataFromVolumeInfo = data => {

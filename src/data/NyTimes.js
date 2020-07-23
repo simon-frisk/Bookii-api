@@ -2,6 +2,7 @@ const { Datastore } = require('@google-cloud/datastore')
 const { UserInputError } = require('apollo-server-express')
 const axios = require('axios')
 const emoji = require('node-emoji')
+const bookIdUtil = require('../util/bookIdUtil')
 
 const datastore = new Datastore()
 
@@ -23,6 +24,7 @@ exports.storeBestSellerLists = async () => {
   for (let index = 0; index < lists.length; index++) {
     const list = lists[index]
     const listData = await getListData(list.name)
+
     await storeList(listData, list.icon || emoji.get('books'), index)
     await new Promise(resolve => setTimeout(resolve, 10000))
   }
@@ -43,11 +45,15 @@ async function storeList(list, icon, order) {
 
 async function getListData(list) {
   const { data } = await axios.get(createNytURL('/lists.json', `list=${list}`))
+  const isbnList = await Promise.all(
+    data.results.map(book => `isbn13:${book.book_details[0].primary_isbn13}`)
+  )
+  const bookIdList = await Promise.all(
+    isbnList.map(isbn => bookIdUtil.getUpdatedBookId(isbn))
+  )
   return {
     name: data.results[0].display_name,
-    bookIds: data.results.map(
-      book => `isbn13:${book.book_details[0].primary_isbn13}`
-    ),
+    bookIds: bookIdList,
   }
 }
 

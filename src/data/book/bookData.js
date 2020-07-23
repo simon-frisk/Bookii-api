@@ -14,15 +14,13 @@ module.exports = {
       if (!book) throw new ApolloError('Failed to get book data')
       return book
     } else if (bookIdType === 'isbn10' || bookIdType === 'isbn13') {
-      let data = await googleBooksDB.getBookData(bookId)
-      if (!data) {
-        data = await googleBooks.getBookDataFromBookId(bookId)
-        if (!data) throw new ApolloError('Failed to get book data')
-        await googleBooksDB.storeBookData({
-          ...data,
-        })
+      let book = await googleBooksDB.getBookData(bookId)
+      if (!book) {
+        book = await googleBooks.getBookDataFromBookId(bookId)
+        if (!book) throw new ApolloError('Failed to get book data')
+        await googleBooksDB.storeBookData(book)
       }
-      return data
+      return book
     }
   },
   getByQuery: query => googleBooks.getBooksDataFromQuery(query),
