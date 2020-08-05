@@ -8,6 +8,23 @@ module.exports = {
         if (!article.toLowerCase().startsWith(title.toLowerCase())) return false
         if (!article.toLowerCase().includes(authors[0].toLowerCase()))
           return false
+        const filmKeywordIndex = getKeywordIndex(article, [
+          'film',
+          'movie',
+          'tv',
+        ])
+        const bookKeywordIndex = getKeywordIndex(article, [
+          'book',
+          'memoir',
+          'novel',
+          'fiction',
+          'non-fiction',
+        ])
+        if (
+          filmKeywordIndex >= 0 &&
+          (filmKeywordIndex < bookKeywordIndex || bookKeywordIndex < 0)
+        )
+          return false
         return true
       })
       return articles[0]
@@ -23,6 +40,15 @@ function createSearchUrl(query) {
 
 function createDataUrl(pageid) {
   return `http://en.wikipedia.org/w/api.php?action=query&pageids=${pageid}&prop=extracts&explaintext=true&exintro=true&format=json`
+}
+
+function getKeywordIndex(article, keywords) {
+  let first = -1
+  keywords.forEach(keyword => {
+    const index = article.indexOf(keyword)
+    if (index >= 0 && (index < first || first === -1)) first = index
+  })
+  return first
 }
 
 async function getArticles(title, authors) {
