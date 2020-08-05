@@ -80,6 +80,7 @@ module.exports = gql`
     subtitle: String
     authors: [String!]
     categories: [Category!]
+    description: String
     pages: Int
     published: String
     thumbnail: String

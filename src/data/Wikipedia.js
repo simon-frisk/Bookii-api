@@ -4,6 +4,7 @@ module.exports = {
   getExtract: async (title, authors) => {
     try {
       let articles = await getArticles(title, authors)
+      articles = articles.map(article => article.trim())
       articles = articles.filter(article => {
         if (!article.toLowerCase().startsWith(title.toLowerCase())) return false
         if (!article.toLowerCase().includes(authors[0].toLowerCase()))
