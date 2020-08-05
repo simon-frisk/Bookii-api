@@ -23,4 +23,5 @@ module.exports = [
   { name: 'Fantasy', icon: emoji.find('🦄').emoji },
   { name: 'Science fiction', icon: emoji.find('🚀').emoji },
   { name: 'Children', icon: emoji.find('🧒').emoji },
+  //Romance
 ]

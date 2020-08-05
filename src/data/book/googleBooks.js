@@ -25,8 +25,7 @@ exports.getBooksDataFromQuery = async query => {
     const books = volumeInfoArray
       .map(extractDataFromVolumeInfo)
       .filter(book => book)
-    const filteredBooks = filterSearchResults(books)
-    return filteredBooks
+    return books
   } catch (error) {}
 }
 
@@ -57,13 +56,4 @@ const extractDataFromVolumeInfo = data => {
     published: data.publishedDate,
     thumbnail: data.imageLinks && data.imageLinks.thumbnail,
   }
-}
-
-function filterSearchResults(searchBooks) {
-  const books = []
-  searchBooks.forEach(searchBook => {
-    if (!books.some(book => book.title === searchBook.title))
-      books.push(searchBook)
-  })
-  return books
 }
