@@ -41,6 +41,12 @@ module.exports = gql`
       date: String!
       favorite: Boolean!
     ): FeedBook!
+    addFeedBookComment(
+      feedBookId: ID!
+      userId: ID!
+      comment: String!
+    ): FeedBook!
+    removeFeedBookComment(_id: ID!, userId: ID!, feedBookId: ID!): FeedBook!
 
     addWishBook(bookId: String!): String
     removeWishBook(bookId: String!): String
@@ -68,6 +74,7 @@ module.exports = gql`
     _id: ID!
     bookId: String!
     comment: String!
+    comments: [FeedBookComment!]!
     date: String!
     favorite: Boolean!
     book: Book
@@ -101,5 +108,11 @@ module.exports = gql`
     name: String!
     icon: String!
     books: [Book!]!
+  }
+
+  type FeedBookComment {
+    _id: ID!
+    user: User!
+    comment: String!
   }
 `

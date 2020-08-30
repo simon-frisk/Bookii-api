@@ -3,6 +3,7 @@ const Auth = require('../util/Auth')
 const bookData = require('../data/book/bookData')
 const { isBookId } = require('../util/bookIdUtil')
 const { UserInputError } = require('apollo-server-express')
+const User = require('../data/user.model')
 
 module.exports = {
   Mutation: {
@@ -42,6 +43,28 @@ module.exports = {
       await user.save()
       return toRemove
     },
+    async addFeedBookComment(_, { comment, userId, feedBookId }, ctx) {
+      const self = await Auth.checkSignInAndConsentAndReturn(
+        ctx.decodedToken._id
+      )
+      const user = await User.findById(userId)
+      const feedBook = user.feedBooks.id(feedBookId)
+      feedBook.comments.push({
+        user: self._id,
+        comment,
+      })
+      user.save()
+      return feedBook
+    },
+    async removeFeedBookComment(_, { userId, feedBookId, _id }, ctx) {
+      await Auth.checkSignInAndConsentAndReturn(ctx.decodedToken._id)
+      const user = await User.findById(userId)
+      const feedBook = user.feedBooks.id(feedBookId)
+      const comment = feedBook.comments.id(_id)
+      comment.remove()
+      user.save()
+      return feedBook
+    },
   },
   FeedBook: {
     async book(feedBook) {
@@ -49,6 +72,11 @@ module.exports = {
     },
     async user(feedBook) {
       return feedBook.parent()
+    },
+  },
+  FeedBookComment: {
+    async user(feedBookComment) {
+      return User.findById(feedBookComment.user)
     },
   },
 }
