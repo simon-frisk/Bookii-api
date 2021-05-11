@@ -19,7 +19,7 @@
     "express": "^4.17.1",
     "graphql": "^14.6.0",
     "jsonwebtoken-promisified": "^1.0.3",
-    "lodash": "^4.17.19",
+    "lodash": "^4.17.21",
     "mime-types": "^2.1.27",
     "mongoose": "^5.9.2",
     "node-emoji": "^1.10.0",
