@@ -16,7 +16,7 @@
     "axios": "^0.19.2",
     "bcrypt": "^4.0.0",
     "dotenv": "^8.2.0",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "graphql": "^14.6.0",
     "jsonwebtoken-promisified": "^1.0.3",
     "lodash": "^4.17.19",
